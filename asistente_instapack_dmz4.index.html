@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instapack · Proceso de Selección DMZ4</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --orange: #FF9900; --dark: #1A1A2E; --white: #ffffff;
+    --gray-bg: #F7F7F7; --gray-border: #E0E0E0; --gray-text: #666;
+    --green: #27AE60; --green-bg: #EAF7EF; --red: #E74C3C; --red-bg: #FDEDEC;
+    --blue-bg: #EBF5FB; --blue: #2980B9; --radius: 12px; --radius-sm: 8px;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-bg); min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px 48px; }
+  .container { width: 100%; max-width: 560px; }
+  .header { background: var(--dark); border-radius: var(--radius) var(--radius) 0 0; padding: 20px 24px; display: flex; align-items: center; gap: 14px; }
+  .logo { width: 44px; height: 44px; background: var(--orange); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: var(--dark); flex-shrink: 0; letter-spacing: 0.5px; text-align: center; line-height: 1.3; }
+  .header-text h1 { font-size: 16px; font-weight: 600; color: var(--white); }
+  .header-text p  { font-size: 12px; color: var(--orange); margin-top: 2px; }
+  .progress-wrap { background: var(--dark); padding: 0 24px 16px; }
+  .progress-track { height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; }
+  .progress-fill  { height: 100%; background: var(--orange); border-radius: 2px; transition: width 0.4s ease; }
+  .card { background: var(--white); border-radius: 0 0 var(--radius) var(--radius); padding: 28px 24px 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .bubble { background: var(--gray-bg); border: 1px solid var(--gray-border); border-radius: 4px var(--radius) var(--radius) var(--radius); padding: 14px 16px; font-size: 14px; line-height: 1.65; color: #222; margin-bottom: 20px; }
+  .bubble b { font-weight: 600; }
+  .bot-name { font-size: 11px; color: var(--gray-text); margin-bottom: 6px; font-weight: 600; }
+  .step-label { font-size: 11px; color: var(--gray-text); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
+  input[type=text], input[type=date], select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--gray-border); border-radius: var(--radius-sm); font-size: 14px; color: #222; background: var(--white); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+  input:focus, select:focus { border-color: var(--orange); }
+  input::placeholder { color: #aaa; }
+  label.field-label { display: block; font-size: 13px; font-weight: 500; color: #444; margin-bottom: 6px; margin-top: 14px; }
+  label.field-label:first-of-type { margin-top: 0; }
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .opt { background: var(--white); border: 1.5px solid var(--gray-border); border-radius: var(--radius-sm); padding: 11px 14px; font-size: 14px; color: #222; cursor: pointer; text-align: left; transition: border-color 0.15s, background 0.15s; display: flex; align-items: center; gap: 10px; }
+  .opt:hover { border-color: var(--orange); background: #FFFBF2; }
+  .opt.selected { border-color: var(--orange); background: #FFF8EC; color: #7A4500; font-weight: 500; }
+  .opt .radio { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--gray-border); flex-shrink: 0; transition: border-color 0.15s, background 0.15s; }
+  .opt.selected .radio { border-color: var(--orange); background: var(--orange); }
+  .btn-primary { width: 100%; padding: 13px; background: var(--dark); color: var(--orange); border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 6px; transition: opacity 0.2s; }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-primary:not(:disabled):hover { opacity: 0.88; }
+  .slide-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
+  .btn-nav { padding: 9px 18px; border: 1.5px solid var(--gray-border); border-radius: var(--radius-sm); background: var(--white); color: #333; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+  .btn-nav:hover { background: var(--gray-bg); }
+  .btn-nav.primary { background: var(--dark); color: var(--orange); border-color: var(--dark); }
+  .btn-nav.primary:hover { opacity: 0.88; }
+  .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+  .slide-dots { display: flex; gap: 6px; }
+  .sdot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray-border); transition: background 0.2s; }
+  .sdot.active { background: var(--dark); }
+  .sdot.done   { background: var(--orange); }
+  .slide-icon  { font-size: 32px; margin-bottom: 12px; }
+  .slide-title { font-size: 17px; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+  .slide-body  { font-size: 14px; color: #444; line-height: 1.7; }
+  .slide-body b { color: #111; font-weight: 600; }
+  .tag { display: inline-block; background: #FFF3E0; color: #7A4500; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 20px; margin: 3px 3px 3px 0; }
+  .tag.green { background: var(--green-bg); color: #1A6B3C; }
+  .tag.blue  { background: var(--blue-bg);  color: #1A5276; }
+  .info-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 9px; }
+  .info-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 7px; }
+  .box { border-radius: var(--radius-sm); padding: 16px 18px; margin-top: 4px; }
+  .box.green  { background: var(--green-bg); border: 1px solid #A9DFBF; }
+  .box.red    { background: var(--red-bg);   border: 1px solid #F5B7B1; }
+  .box.blue   { background: var(--blue-bg);  border: 1px solid #AED6F1; }
+  .box.orange { background: #FFF8EC;         border: 1px solid #FDEBD0; }
+  .box p { font-size: 14px; line-height: 1.65; }
+  .box.green p  { color: #1A6B3C; }
+  .box.red   p  { color: #922B21; }
+  .box.blue  p  { color: #1A5276; }
+  .box.orange p { color: #7A4500; }
+  .box b { font-weight: 600; }
+  .badge-formacion { display: inline-block; background: var(--green-bg); color: #1A6B3C; border: 1px solid #A9DFBF; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-top: 10px; }
+  .badge-formacion.required { background: #FFF8EC; color: #7A4500; border-color: #FDEBD0; }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--gray-border); font-size: 13px; }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-row .lbl { color: var(--gray-text); }
+  .summary-row .val { font-weight: 600; color: #222; text-align: right; max-width: 60%; }
+  .divider { height: 1px; background: var(--gray-border); margin: 18px 0; }
+  .hidden { display: none; }
+  .req-list { display: flex; flex-direction: column; gap: 6px; margin: 14px 0; }
+  .req-item { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 9px 12px; border-radius: var(--radius-sm); background: var(--gray-bg); border: 1px solid var(--gray-border); }
+  .req-item .icon { font-size: 16px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- Hidden Netlify form to capture submissions -->
+<!-- Formspree handles submissions via JS fetch -->
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">INS<br>PACK</div>
+    <div class="header-text">
+      <h1>Instapack · Amazon DMZ4</h1>
+      <p>Repartidor/a de paquetería en furgoneta</p>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+  </div>
+
+  <div class="card">
+
+    <!-- ══ S0: IDENTIFICACIÓN ══ -->
+    <div id="s0">
+      <div class="bubble">
+        <div class="bot-name">Asistente Instapack</div>
+        Hola, bienvenido/a al proceso de selección de <b>Instapack</b>, empresa colaboradora de Amazon Logistics en la estación <b>DMZ4 (Getafe)</b>.<br><br>
+        Para comenzar, escribe tu <b>nombre completo</b> tal y como aparece en tu documentación.
+      </div>
+      <label class="field-label">Nombre completo</label>
+      <input type="text" id="inp-nombre" placeholder="Ej: Juan García López" oninput="checkNombre()" />
+      <div id="nombre-feedback" style="font-size:12px; margin-top:6px; min-height:18px;"></div>
+      <button class="btn-primary" id="btn-s0" disabled onclick="goDni()" style="margin-top:16px;">Continuar →</button>
+    </div>
+
+    <!-- ══ S0b: VERIFICACIÓN DNI ══ -->
+    <div id="s0b" class="hidden">
+      <div class="bubble">
+        <div class="bot-name">Asistente Instapack</div>
+        Para verificar tu identidad, introduce tu <b>DNI o NIE</b> (incluyendo la letra, sin espacios).
+      </div>
+      <label class="field-label">DNI / NIE</label>
+      <input type="text" id="inp-dni" placeholder="Ej: 12345678A" oninput="checkDni()" style="text-transform:uppercase;" maxlength="10" />
+      <div id="dni-feedback" style="font-size:12px; margin-top:6px; min-height:18px;"></div>
+      <button class="btn-primary" id="btn-s0b" disabled onclick="goS2()" style="margin-top:16px;">Continuar →</button>
+    </div>
+
+    <!-- ══ S1: NO ENCONTRADO ══ -->
+    <div id="s1-notfound" class="hidden">
+      <div class="box red">
+        <p><b>No encontramos tu nombre en la lista de candidatos convocados.</b><br><br>
+        Si crees que es un error, contacta con la ETT que te envió la convocatoria para verificar que tu nombre está registrado correctamente.<br><br>
+        Puedes volver atrás e intentarlo de nuevo.</p>
+      </div>
+      <button class="btn-primary" onclick="resetS0()" style="margin-top:16px;">← Volver a intentarlo</button>
+    </div>
+
+    <!-- ══ S2: FILTRO 3 REQUISITOS ══ -->
+    <div id="s2" class="hidden">
+      <div class="bubble">
+        <div class="bot-name">Asistente Instapack</div>
+        Hola, <b id="nombre-display"></b>. Antes de explicarte todo sobre el puesto, necesitamos verificar <b>3 requisitos básicos</b>.
+      </div>
+
+      <!-- Q1: Carnet -->
+      <div id="q1">
+        <div class="step-label">Requisito 1 de 3</div>
+        <div class="bubble"><div class="bot-name">Asistente Instapack</div>¿Cuánto tiempo llevas con el carnet de conducir? Necesitamos un <b>mínimo de 6 meses de antigüedad.</b></div>
+        <div class="options">
+          <div class="opt" onclick="selectQ(1,this,false)"><div class="radio"></div>Menos de 6 meses</div>
+          <div class="opt" onclick="selectQ(1,this,true)"><div class="radio"></div>Entre 6 meses y 1 año</div>
+          <div class="opt" onclick="selectQ(1,this,true)"><div class="radio"></div>Más de 1 año</div>
+        </div>
+        <button class="btn-primary" id="btn-q1" disabled onclick="nextQ(1)">Siguiente →</button>
+      </div>
+
+      <!-- Q2: Vehiculo -->
+      <div id="q2" class="hidden">
+        <div class="step-label">Requisito 2 de 3</div>
+        <div class="bubble"><div class="bot-name">Asistente Instapack</div>¿Tienes <b>vehículo propio</b> para desplazarte a la nave de Getafe? El transporte público es muy escaso en esa zona.</div>
+        <div class="options">
+          <div class="opt" onclick="selectQ(2,this,true)"><div class="radio"></div>Sí, tengo vehículo propio</div>
+          <div class="opt" onclick="selectQ(2,this,false)"><div class="radio"></div>No tengo vehículo propio</div>
+        </div>
+        <button class="btn-primary" id="btn-q2" disabled onclick="nextQ(2)">Siguiente →</button>
+      </div>
+
+      <!-- Q3: Disponibilidad fines de semana -->
+      <div id="q3" class="hidden">
+        <div class="step-label">Requisito 3 de 3</div>
+        <div class="bubble"><div class="bot-name">Asistente Instapack</div>El trabajo es de <b>lunes a domingo</b>, con 2 días de descanso rotativos a la semana. ¿Tienes disponibilidad para trabajar en <b>fines de semana</b>?</div>
+        <div class="options">
+          <div class="opt" onclick="selectQ(3,this,true)"><div class="radio"></div>Sí, tengo disponibilidad completa incluyendo fines de semana</div>
+          <div class="opt" onclick="selectQ(3,this,false)"><div class="radio"></div>No puedo trabajar los fines de semana</div>
+        </div>
+        <button class="btn-primary" id="btn-q3" disabled onclick="nextQ(3)">Siguiente →</button>
+      </div>
+
+      <!-- Q4: Experiencia Amazon (informativo) -->
+      <div id="q4" class="hidden">
+        <div class="bubble">
+          <div class="bot-name">Asistente Instapack</div>
+          ¡Perfecto, cumples todos los requisitos! Una última pregunta informativa:<br><br>
+          ¿Has trabajado anteriormente como repartidor/a en <b>Amazon</b>?<br>
+          <span style="font-size:12px; color:var(--gray-text);">Esto nos ayuda a saber si necesitas realizar la formación previa.</span>
+        </div>
+        <div class="options">
+          <div class="opt" onclick="selectQ(4,this,'si')"><div class="radio"></div>Sí, he trabajado en Amazon</div>
+          <div class="opt" onclick="selectQ(4,this,'no')"><div class="radio"></div>No, nunca he trabajado en Amazon</div>
+        </div>
+
+        <div id="q4-extra" class="hidden" style="margin-top:4px; margin-bottom: 16px;">
+          <label class="field-label">¿Con qué empresa (DSP) trabajabas?</label>
+          <input type="text" id="inp-empresa" placeholder="Ej: Instapack, LogisticPlus..." />
+          <label class="field-label">¿En qué estación de Amazon?</label>
+          <input type="text" id="inp-estacion" placeholder="Ej: DMZ4, MAD4, MAD5..." />
+          <label class="field-label">¿Cuándo fue tu último día de trabajo?</label>
+          <input type="date" id="inp-lastday" onchange="calcDays()" />
+          <div id="dias-info" style="margin-top:8px; font-size:13px; min-height:20px;"></div>
+        </div>
+
+        <button class="btn-primary" id="btn-q4" disabled onclick="goResults()">Ver la oferta de trabajo →</button>
+      </div>
+
+      <!-- RECHAZO -->
+      <div id="rechazo" class="hidden">
+        <div class="box red">
+          <p><b>Gracias por tu interés en Instapack.</b><br><br>
+          Desafortunadamente, en este momento no cumples alguno de los requisitos mínimos para continuar con el proceso.<br><br>
+          <b>Los requisitos necesarios son:</b></p>
+          <div class="req-list" style="margin-top:10px;">
+            <div class="req-item"><span class="icon">🪪</span> Carnet de conducir con al menos 6 meses de antigüedad</div>
+            <div class="req-item"><span class="icon">🚗</span> Vehículo propio para desplazarse a Getafe</div>
+            <div class="req-item"><span class="icon">📅</span> Disponibilidad para trabajar en fines de semana</div>
+          </div>
+          <p style="margin-top:10px; color:#922B21;">¡Mucho ánimo y te animamos a intentarlo de nuevo cuando tu situación cambie!</p>
+        </div>
+      </div>
+
+      <!-- YA COMPLETADO -->
+      <div id="already-done" class="hidden">
+        <div class="box orange">
+          <p><b>Ya has completado este cuestionario anteriormente.</b><br><br>
+          Solo es posible realizarlo una vez. Si crees que ha habido un error o quieres modificar tu respuesta, escríbenos al mismo número de WhatsApp desde el que recibiste el enlace y te ayudaremos.<br><br>
+          <b>¡Gracias por tu tiempo!</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ S3: OFERTA ══ -->
+    <div id="s3" class="hidden">
+
+      <div class="bubble">
+        <div class="bot-name">Asistente Instapack</div>
+        ¡Genial, <b id="nombre-display2"></b>! A continuación te explicamos todo lo que necesitas saber sobre el puesto en Instapack.
+      </div>
+
+      <div id="resumen-candidato" style="margin-bottom:16px;"></div>
+      <div id="formacion-badge" style="margin-bottom:20px; text-align:center;"></div>
+
+      <div class="divider"></div>
+
+      <!-- SLIDES -->
+
+      <!-- Slide 0: Hero Amazon -->
+      <div id="slide0">
+        <div style="background:linear-gradient(135deg,#1A1A2E 0%,#232F3E 100%);border-radius:12px;padding:24px 20px;margin-bottom:4px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(255,153,0,0.12);border-radius:50%;"></div>
+          <div style="position:absolute;bottom:-30px;right:30px;width:70px;height:70px;background:rgba(255,153,0,0.08);border-radius:50%;"></div>
+          <div style="font-size:11px;font-weight:700;color:#FF9900;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Amazon Logistics · DMZ4</div>
+          <div style="font-size:22px;font-weight:800;color:#FFFFFF;line-height:1.25;margin-bottom:10px;">Repartidor/a de<br>paquetería en furgoneta</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5;margin-bottom:16px;">Únete al equipo de <b style="color:#FF9900;">Instapack</b>, empresa colaboradora de Amazon, en nuestra estación de Getafe.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="background:rgba(255,153,0,0.18);color:#FF9900;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,153,0,0.3);">9h abonadas/día</span>
+            <span style="background:rgba(255,153,0,0.18);color:#FF9900;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,153,0,0.3);">Furgoneta incluida</span>
+            <span style="background:rgba(255,153,0,0.18);color:#FF9900;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,153,0,0.3);">+5€ incentivo/día</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 1: Lugar de trabajo -->
+      <div id="slide1" class="hidden">
+        <div class="slide-icon">📍</div>
+        <div class="slide-title">Lugar de trabajo</div>
+        <div class="slide-body">
+          El puesto se realiza en la nave de <b>Amazon Logistics DMZ4, Getafe</b>. Cada día llegarás a la nave, cargarás tu ruta y saldrás a repartir.<br><br>
+          <b>Zonas de reparto:</b><br><br>
+          <span class="tag">Villaverde Alto y Bajo</span>
+          <span class="tag">Getafe Centro</span>
+          <span class="tag">Zona Norte de Getafe</span>
+          <span class="tag">Los Molinos</span>
+          <span class="tag">Villa de Vallecas</span>
+          <span class="tag">Perales del Río</span>
+        </div>
+      </div>
+
+      <!-- Slide 2: Día a día -->
+      <div id="slide2" class="hidden">
+        <div class="slide-icon">🚐</div>
+        <div class="slide-title">El trabajo del día a día</div>
+        <div class="slide-body">
+          <div class="info-row"><div class="info-dot"></div><div>Trabajarás como <b>repartidor/a de paquetería en furgoneta</b> para Instapack dentro de la red Amazon.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Cada jornada recoges tu ruta en la nave de Getafe, cargas los paquetes y sales a repartir por tu zona asignada.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div><b>Las rutas siempre hay que terminarlas</b>, independientemente del volumen del día.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Al terminar, retornas a la estación, descargas las sacas, dejas la furgoneta en orden y depositas las llaves.</div></div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Cuadrantes y WOFFU -->
+      <div id="slide3" class="hidden">
+        <div class="slide-icon">📅</div>
+        <div class="slide-title">Cuadrantes y fichajes</div>
+        <div class="slide-body">
+          <div class="info-row"><div class="info-dot"></div><div>Se trabaja de <b>lunes a domingo</b>, con <b>2 días de descanso rotativos</b> a la semana.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Cada <b>martes</b> se publican los cuadrantes de la semana siguiente (de domingo a sábado).</div></div>
+          <div style="background:#F0F4FF;border:1px solid #C5D0F0;border-radius:10px;padding:14px 16px;margin:10px 0;">
+            <div style="font-size:13px;font-weight:700;color:#1A1A2E;margin-bottom:8px;">📱 App WOFFU — Obligatorio</div>
+            <div style="font-size:13px;color:#333;line-height:1.6;">Los cuadrantes se consultan en <b>WOFFU</b>, a la que tendrás acceso desde el primer día. Es <b>obligatorio fichar la entrada al iniciar la jornada y la salida al finalizarla</b>. Todos los fichajes quedan registrados en la app.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Retribución + incentivo -->
+      <div id="slide4" class="hidden">
+        <div class="slide-icon">💰</div>
+        <div class="slide-title">Retribución e incentivos</div>
+        <div class="slide-body">
+          <div class="info-row"><div class="info-dot"></div><div>Se abonan <b>9 horas diarias</b> cada día que vengas a trabajar, siempre, aunque termines antes.</div></div>
+          <div style="background:#FFFBEC;border:1px solid #FFE082;border-radius:10px;padding:14px 16px;margin:10px 0;">
+            <div style="font-size:13px;font-weight:700;color:#7A4500;margin-bottom:6px;">⭐ Incentivo conductor/a experto/a</div>
+            <div style="font-size:13px;color:#7A4500;line-height:1.6;">Cuando seas conductor/a experto/a, <b>cada día que termines sin paquetería pendiente recibirás 5€ de incentivo</b>. Se calcula a final de mes y se abona directamente en nómina.</div>
+          </div>
+          <div class="info-row"><div class="info-dot"></div><div>Para consultas sobre <b>salario</b>, contacta con tu ETT (<b id="ett-nombre">tu ETT</b>).</div></div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Lo que te damos -->
+      <div id="slide5" class="hidden">
+        <div class="slide-icon">🎁</div>
+        <div class="slide-title">Lo que te proporcionamos</div>
+        <div class="slide-body">
+          No necesitas nada propio para trabajar. Instapack te facilita todo:<br><br>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 12px;">
+            <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 12px;text-align:center;">
+              <div style="font-size:24px;margin-bottom:6px;">🚐</div>
+              <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Furgoneta de reparto</div>
+            </div>
+            <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 12px;text-align:center;">
+              <div style="font-size:24px;margin-bottom:6px;">📱</div>
+              <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Terminal de trabajo</div>
+            </div>
+            <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 12px;text-align:center;">
+              <div style="font-size:24px;margin-bottom:6px;">📡</div>
+              <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Línea de teléfono</div>
+            </div>
+            <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 12px;text-align:center;">
+              <div style="font-size:24px;margin-bottom:6px;">🗺️</div>
+              <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Ruta asignada</div>
+            </div>
+          </div>
+          Solo necesitas presentarte con ganas de trabajar.
+        </div>
+      </div>
+
+      <!-- Slide 6: Formación -->
+      <div id="slide6" class="hidden">
+        <div class="slide-icon">🎓</div>
+        <div class="slide-title">Formación previa</div>
+        <div id="slide6-body" class="slide-body"></div>
+      </div>
+
+      <!-- Slide 7: Plan escalonado 11 días -->
+      <div id="slide7" class="hidden">
+        <div class="slide-icon">📈</div>
+        <div class="slide-title">Plan de incorporación — 11 días</div>
+        <div class="slide-body">
+          Tras la formación, los primeros <b>11 días trabajarás de forma progresiva</b>:<br><br>
+          <div style="display:flex;flex-direction:column;gap:8px;margin:4px 0;">
+            <div style="display:flex;align-items:center;gap:12px;background:#EBF5FB;border:1px solid #AED6F1;border-radius:10px;padding:12px 14px;">
+              <div style="background:#2980B9;color:white;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0;text-align:center;min-width:62px;">Días 1–3</div>
+              <div style="font-size:13px;color:#1A5276;"><b>60% de carga</b> — Aprendiendo ruta y procedimientos</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:#E8F8F5;border:1px solid #A2D9CE;border-radius:10px;padding:12px 14px;">
+              <div style="background:#1A9E77;color:white;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0;text-align:center;min-width:62px;">Días 4–7</div>
+              <div style="font-size:13px;color:#0E6655;"><b>75% de carga</b> — Ganando confianza y ritmo</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:#FEF9E7;border:1px solid #F9E79F;border-radius:10px;padding:12px 14px;">
+              <div style="background:#D4AC0D;color:white;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0;text-align:center;min-width:62px;">Días 7–11</div>
+              <div style="font-size:13px;color:#7D6608;"><b>90% de carga</b> — Casi a pleno rendimiento</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:#1A1A2E;border-radius:10px;padding:12px 14px;">
+              <div style="background:#FF9900;color:#1A1A2E;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0;text-align:center;min-width:62px;">Día 12+</div>
+              <div style="font-size:13px;color:#FF9900;"><b>Conductor/a experto/a</b> — 100% autónomo + incentivo 5€/día</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 8: Próximos pasos + aceptar/rechazar -->
+      <div id="slide8" class="hidden">
+        <div class="slide-icon">🙌</div>
+        <div class="slide-title">Próximos pasos</div>
+        <div class="slide-body">
+          <div class="info-row"><div class="info-dot"></div><div>Nuestro equipo te contactará para comunicarte la <b>fecha de incorporación y formación</b>.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Recibirás todo por <b>WhatsApp</b> al número que facilitaste a tu ETT.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Para dudas sobre tu contrato, contacta con tu ETT: <b id="ett-nombre2"></b>.</div></div>
+          <br>
+          <div style="background:linear-gradient(135deg,#1A1A2E 0%,#232F3E 100%);border-radius:12px;padding:20px;text-align:center;">
+            <div style="font-size:26px;margin-bottom:8px;">🚀</div>
+            <div style="font-size:15px;font-weight:700;color:#FF9900;margin-bottom:6px;">¿Aceptas la oferta?</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:16px;">Tu respuesta quedará registrada y nos ayuda a planificar tu incorporación.</div>
+            <div style="display:flex;gap:10px;justify-content:center;">
+              <button onclick="responder('acepta')" id="btn-acepta" style="background:#27AE60;color:white;border:none;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;flex:1;max-width:160px;">✓ Acepto</button>
+              <button onclick="responder('rechaza')" id="btn-rechaza" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;flex:1;max-width:160px;">✗ No me interesa</button>
+            </div>
+            <div id="respuesta-final" style="margin-top:14px;font-size:13px;min-height:20px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav" style="margin-top:20px;">
+        <button class="btn-nav" id="prev-btn" onclick="changeSlide(-1)" disabled>← Anterior</button>
+        <div class="slide-dots" id="slide-dots"></div>
+        <button class="btn-nav primary" id="next-btn" onclick="changeSlide(1)">Siguiente →</button>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+</div><!-- /container -->
+
+<script>
+var CANDIDATES = [
+  {"ett":"JOB AND TALENT","nombre":"Jesus Rivera Aguilera","dni":"49704937M","email":"rokydelnaranjo433@gmail.com"},
+  {"ett":"JOB AND TALENT","nombre":"Daniel Mendez","dni":"03177130W","email":"dm3627000@gmail.com"},
+  {"ett":"JOB AND TALENT","nombre":"Raul Gil Garcia","dni":"55067948Z","email":"raulgilgarcia05@icloud.com"},
+  {"ett":"JOB AND TALENT","nombre":"Ayoub Taieboune","dni":"Y8871174L","email":"ataieboune@gmail.com"},
+  {"ett":"JOB AND TALENT","nombre":"Iker Alcocer Cruz","dni":"09248526L","email":"nenealcocer10@gmail.com"},
+  {"ett":"JOB AND TALENT","nombre":"Raquel Daganzo Gallego","dni":"53011441Y","email":"raquel_madrid81@hotmail.com"},
+  {"ett":"JOB AND TALENT","nombre":"Alberto Toribio Santos","dni":"09032516W","email":"santos.ja@hotmail.com"},
+  {"ett":"JOB AND TALENT","nombre":"Fikri El Mossaoui","dni":"X6694064Y","email":"fikrimosa3@gmail.com"},
+  {"ett":"GI GROUP","nombre":"Juan Jose Alamo Pacheco","dni":"06008270A","email":"juanjo19_28@hotmail.com"},
+  {"ett":"GI GROUP","nombre":"Amparo Garrido Fernandez","dni":"11868875R","email":"amparogarrido1992@gmail.com"},
+  {"ett":"GI GROUP","nombre":"Alex Ballestero Baro","dni":"49585240T","email":"ballestasxx@gmail.com"},
+  {"ett":"GI GROUP","nombre":"Ricardo Iglesias Fernandez","dni":"51013328H","email":"ricardoiglesias238@gmail.com"},
+  {"ett":"GI GROUP","nombre":"Jidahia Campo Mendoza","dni":"Y9135224Y","email":"salomejida@gmail.com"},
+  {"ett":"GI GROUP","nombre":"Mostafa Sbihi","dni":"Z1493873M","email":"Yousseflomranoi@gmail.com"},
+  {"ett":"ADECCO","nombre":"Mohamed Talibe Diallo Diaoune","dni":"60554933G","email":"db3213@gmail.com"},
+  {"ett":"ADECCO","nombre":"Daniel Navarrete Vargas","dni":"33527651E","email":"daninv1983@gmail.com"},
+  {"ett":"ADECCO","nombre":"Sergio Diaz Bonilla","dni":"70425726W","email":"sergiodiiazbo@gmail.com"}
+];
+
+var state = {
+  candidate: null,
+  q1ok: null, q2ok: null, q3ok: null,
+  amazonExp: null, empresa: '', estacion: '',
+  lastDay: null, diasFuera: null, noFormacion: false,
+  currentSlide: 0, totalSlides: 9
+};
+
+function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
+function show(id){ document.getElementById(id).classList.remove('hidden'); }
+function hide(id){ document.getElementById(id).classList.add('hidden'); }
+function setProgress(pct){ document.getElementById('pbar').style.width = pct+'%'; }
+
+// ── S0 ──
+function checkNombre(){
+  var val = document.getElementById('inp-nombre').value.trim();
+  var fb  = document.getElementById('nombre-feedback');
+  var btn = document.getElementById('btn-s0');
+  if(val.length < 3){ fb.textContent=''; btn.disabled=true; return; }
+  var found = CANDIDATES.find(function(c){ return norm(c.nombre)===norm(val); });
+  if(found){
+    fb.style.color='#1A6B3C';
+    fb.textContent='✓ Nombre encontrado en la lista de convocados';
+    btn.disabled=false;
+    state.candidate=found;
+  } else {
+    fb.style.color='#922B21';
+    fb.textContent='No encontramos este nombre. Comprueba que coincide con el que facilitaste a tu ETT.';
+    btn.disabled=true;
+    state.candidate=null;
+  }
+}
+
+function goDni(){
+  if(!state.candidate) return;
+  hide('s0'); show('s0b');
+  setProgress(8);
+}
+
+function checkDni(){
+  var val = document.getElementById('inp-dni').value.trim().toUpperCase();
+  var fb  = document.getElementById('dni-feedback');
+  var btn = document.getElementById('btn-s0b');
+  if(val.length < 8){ fb.textContent=''; btn.disabled=true; return; }
+  if(val.toUpperCase() === state.candidate.dni.toUpperCase()){
+    fb.style.color='#1A6B3C';
+    fb.textContent='✓ Identidad verificada correctamente';
+    btn.disabled=false;
+  } else {
+    fb.style.color='#922B21';
+    fb.textContent='El DNI/NIE no coincide. Compruébalo e inténtalo de nuevo.';
+    btn.disabled=true;
+  }
+}
+
+function enviarFormspree(data, callback){
+  fetch('https://formspree.io/f/xpwzgkqb', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify(data)
+  }).then(callback).catch(callback);
+}
+
+function goS2(){
+  hide('s0b');
+  // Check if candidate already completed the form
+  var c = state.candidate;
+  var lsKey = 'done_'+c.nombre.toLowerCase().replace(/\s+/g,'_');
+  var done = null;
+  try{ done = JSON.parse(localStorage.getItem(lsKey)); }catch(e){}
+  if(done){
+    // Show already-done screen
+    hide('s0b');
+    show('s2');
+    document.getElementById('nombre-display').textContent = c.nombre.split(' ')[0];
+    setProgress(100);
+    // Hide all questions, show already-done message
+    ['q1','q2','q3','q4'].forEach(function(id){ hide(id); });
+    var alreadyDiv = document.getElementById('already-done');
+    if(alreadyDiv) show('already-done');
+    return;
+  }
+  show('s2');
+  document.getElementById('nombre-display').textContent = c.nombre.split(' ')[0];
+  setProgress(15);
+}
+
+function resetS0(){
+  hide('s1-notfound'); hide('s0b'); show('s0');
+  document.getElementById('inp-nombre').value='';
+  document.getElementById('nombre-feedback').textContent='';
+  document.getElementById('btn-s0').disabled=true;
+  if(document.getElementById('inp-dni')) document.getElementById('inp-dni').value='';
+  if(document.getElementById('dni-feedback')) document.getElementById('dni-feedback').textContent='';
+  state.candidate=null;
+  setProgress(0);
+}
+
+// ── PREGUNTAS ──
+function selectQ(q, el, val){
+  var parent = document.getElementById('q'+q);
+  parent.querySelectorAll('.opt').forEach(function(o){ o.classList.remove('selected'); });
+  el.classList.add('selected');
+  if(q===1) state.q1ok=val;
+  if(q===2) state.q2ok=val;
+  if(q===3) state.q3ok=val;
+  if(q===4){
+    state.amazonExp=val;
+    val==='si' ? show('q4-extra') : hide('q4-extra');
+    document.getElementById('btn-q4').disabled = false;
+    return;
+  }
+  document.getElementById('btn-q'+q).disabled=false;
+}
+
+function nextQ(q){
+  var ok = q===1 ? state.q1ok : q===2 ? state.q2ok : state.q3ok;
+  hide('q'+q);
+  if(!ok){
+    show('rechazo');
+    setProgress(100);
+    // Send rejection notification via Formspree
+    var c = state.candidate;
+    var motivos = ['Carnet < 6 meses','Sin vehículo propio','Sin disponibilidad fines de semana'];
+    var motivo = motivos[q-1];
+    var now2 = new Date();
+    var f2 = now2.getDate().toString().padStart(2,'0')+'/'+
+              (now2.getMonth()+1).toString().padStart(2,'0')+'/'+
+              now2.getFullYear()+' '+
+              now2.getHours().toString().padStart(2,'0')+':'+
+              now2.getMinutes().toString().padStart(2,'0');
+    // Save to localStorage to block retry
+    try{
+      var lsKey = 'done_'+c.nombre.toLowerCase().replace(/\s+/g,'_');
+      localStorage.setItem(lsKey, JSON.stringify({choice:'descartado', fecha:f2}));
+    }catch(e){}
+    enviarFormspree({
+      nombre: c.nombre,
+      ett: c.ett,
+      respuesta: 'DESCARTADO — ' + motivo,
+      fecha: f2,
+      amazon_exp: 'N/A',
+      dias_fuera: 'N/A',
+      formacion: 'N/A'
+    }, function(){});
+    return;
+  }
+  var prog = [0,25,45,65];
+  setProgress(prog[q]);
+  show('q'+(q+1));
+}
+
+function calcDays(){
+  var d = document.getElementById('inp-lastday').value;
+  if(!d) return;
+  var diff = Math.floor((new Date() - new Date(d))/(1000*60*60*24));
+  state.diasFuera=diff; state.lastDay=d;
+  var info = document.getElementById('dias-info');
+  if(diff < 180){
+    info.style.color='#1A6B3C';
+    info.textContent='✓ '+diff+' días desde tu último día — no necesitarás hacer la formación online.';
+    state.noFormacion=true;
+  } else {
+    info.style.color='#7A4500';
+    info.textContent=diff+' días desde tu último día — deberás realizar la formación online antes de incorporarte.';
+    state.noFormacion=false;
+  }
+  document.getElementById('btn-q4').disabled=false;
+}
+
+function goResults(){
+  if(state.amazonExp==='si'){
+    state.empresa  = document.getElementById('inp-empresa').value.trim();
+    state.estacion = document.getElementById('inp-estacion').value.trim();
+  }
+  hide('s2'); buildOffer(); show('s3'); setProgress(70);
+}
+
+// ── OFFER ──
+function buildOffer(){
+  var c = state.candidate;
+  document.getElementById('nombre-display2').textContent = c.nombre.split(' ')[0];
+  document.getElementById('ett-nombre').textContent  = c.ett;
+  document.getElementById('ett-nombre2').textContent = c.ett;
+
+  var rows = [
+    ['Nombre', c.nombre],
+    ['ETT', c.ett],
+    ['Carnet', 'Más de 6 meses ✓'],
+    ['Vehículo', 'Propio ✓'],
+    ['Disponibilidad', 'Fines de semana ✓'],
+  ];
+  if(state.amazonExp==='si'){
+    rows.push(['Exp. Amazon', 'Sí — '+(state.empresa||'—')+' / '+(state.estacion||'—')]);
+    if(state.diasFuera!==null) rows.push(['Días fuera Amazon', state.diasFuera+' días']);
+  } else {
+    rows.push(['Exp. Amazon','Sin experiencia previa']);
+  }
+  document.getElementById('resumen-candidato').innerHTML = rows.map(function(r){
+    return '<div class="summary-row"><span class="lbl">'+r[0]+'</span><span class="val">'+r[1]+'</span></div>';
+  }).join('');
+
+  var badge = (state.amazonExp==='si' && state.noFormacion)
+    ? '<span class="badge-formacion">✓ Sin formación previa necesaria</span>'
+    : '<span class="badge-formacion required">Formación online requerida</span>';
+  document.getElementById('formacion-badge').innerHTML = badge;
+
+  // Slide 5 dinámico
+  var s5html;
+  if(state.amazonExp==='si' && state.noFormacion){
+    s5html = '<div class="box green"><p><b>¡Buenas noticias!</b> Como llevas menos de 180 días fuera de Amazon, <b>no necesitas realizar la formación online</b>.<br><br>Te incorporarás directamente con una breve formación en carretera junto a un compañero el primer día.</p></div>';
+  } else {
+    s5html = '<div class="info-row"><div class="info-dot"></div><div>Recibirás el enlace por <b>WhatsApp</b> al número que facilitaste a tu ETT.</div></div>' +
+             '<div class="info-row"><div class="info-dot"></div><div>Formación <b>100% online</b>, de <b>9:00h a 16:30h</b> (8 horas). Es obligatoria antes de empezar.</div></div>' +
+             '<div class="info-row"><div class="info-dot"></div><div>Al día siguiente realizarás una <b>formación en carretera</b> acompañado por un compañero.</div></div>' +
+             '<div class="info-row"><div class="info-dot"></div><div>A partir de ese momento ya empiezas a trabajar de forma autónoma.</div></div>';
+  }
+  document.getElementById('slide6-body').innerHTML = s5html;
+
+  var dots = '';
+  for(var i=0;i<state.totalSlides;i++) dots+='<div class="sdot" id="dot'+i+'"></div>';
+  document.getElementById('slide-dots').innerHTML = dots;
+  renderSlide(0);
+}
+
+// ── SLIDES ──
+function renderSlide(n){
+  for(var i=0;i<state.totalSlides;i++){
+    var el=document.getElementById('slide'+i);
+    var dot=document.getElementById('dot'+i);
+    if(el) el.classList.toggle('hidden', i!==n);
+    if(dot){
+      dot.classList.remove('active','done');
+      if(i<n) dot.classList.add('done');
+      else if(i===n) dot.classList.add('active');
+    }
+  }
+  state.currentSlide=n;
+  document.getElementById('prev-btn').disabled = n===0;
+  var nb = document.getElementById('next-btn');
+  if(n===state.totalSlides-1){
+    nb.textContent='¡Listo!';
+    nb.onclick=function(){ nb.disabled=true; nb.textContent='Completado ✓'; setProgress(100); };
+  } else {
+    nb.textContent='Siguiente →';
+    nb.onclick=function(){ changeSlide(1); };
+  }
+  setProgress(70 + Math.round((n/(state.totalSlides-1))*30));
+}
+
+function changeSlide(dir){
+  renderSlide(Math.max(0, Math.min(state.totalSlides-1, state.currentSlide+dir)));
+}
+
+function responder(choice){
+  var c = state.candidate;
+  var btnA = document.getElementById('btn-acepta');
+  var btnR = document.getElementById('btn-rechaza');
+  var rf   = document.getElementById('respuesta-final');
+  btnA.disabled = true;
+  btnR.disabled = true;
+  state.respuesta = choice;
+
+  rf.style.color = 'rgba(255,255,255,0.6)';
+  rf.innerHTML = 'Registrando respuesta...';
+
+  var now = new Date();
+  var fecha = now.toLocaleString('es-ES');
+
+  // Submit to Netlify Forms
+  var formData = new FormData();
+  formData.append('form-name',   'respuestas-candidatos');
+  formData.append('nombre',      c.nombre);
+  formData.append('ett',         c.ett);
+  formData.append('respuesta',   choice === 'acepta' ? 'ACEPTA' : 'RECHAZA');
+  formData.append('fecha',       fecha);
+  formData.append('amazon_exp',  state.amazonExp === 'si' ? 'Sí — ' + (state.empresa||'') + ' / ' + (state.estacion||'') : 'No');
+  formData.append('dias_fuera',  state.diasFuera !== null ? state.diasFuera + ' días' : 'N/A');
+  formData.append('formacion',   state.noFormacion ? 'No necesaria' : 'Requerida');
+
+  // Save to localStorage to prevent double submission
+  var lsKey = 'done_' + c.nombre.toLowerCase().replace(/\s+/g,'_');
+  var now2 = new Date();
+  var f2 = now2.getDate().toString().padStart(2,'0')+'/'+
+            (now2.getMonth()+1).toString().padStart(2,'0')+'/'+
+            now2.getFullYear()+' '+
+            now2.getHours().toString().padStart(2,'0')+':'+
+            now2.getMinutes().toString().padStart(2,'0');
+  try{
+    localStorage.setItem(lsKey, JSON.stringify({choice:choice, fecha:f2}));
+  }catch(e){}
+
+  // Send to Formspree
+  enviarFormspree({
+    nombre: c.nombre,
+    ett: c.ett,
+    respuesta: choice === 'acepta' ? 'ACEPTA LA OFERTA' : 'RECHAZA LA OFERTA',
+    fecha: f2,
+    amazon_exp: state.amazonExp === 'si' ? 'Sí — '+(state.empresa||'')+' / '+(state.estacion||'') : 'No',
+    dias_fuera: state.diasFuera !== null ? state.diasFuera+' días' : 'N/A',
+    formacion: state.noFormacion ? 'No necesaria' : 'Requerida'
+  }, function(){ mostrarConfirmacion(choice, rf, btnA, btnR); });
+}
+
+function mostrarConfirmacion(choice, rf, btnA, btnR){
+  if(choice === 'acepta'){
+    btnA.style.background = '#1A6B3C';
+    rf.style.color = '#A9DFBF';
+    rf.innerHTML = '✓ ¡Genial! Hemos registrado tu aceptación. Nos pondremos en contacto contigo pronto.';
+  } else {
+    btnR.style.background = 'rgba(231,76,60,0.4)';
+    btnR.style.borderColor = 'rgba(231,76,60,0.5)';
+    rf.style.color = '#F5B7B1';
+    rf.innerHTML = 'Hemos registrado tu respuesta. ¡Gracias por tu tiempo y mucho ánimo!';
+  }
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════
+     ADMIN PANEL - hidden, accessible via URL hash
+═══════════════════════════════════════════════ -->
+<div id="admin-wrap" style="display:none;max-width:560px;margin:24px auto 48px;padding:0 16px;">
+
+  <div style="background:#1A1A2E;border-radius:12px 12px 0 0;padding:18px 22px;display:flex;align-items:center;gap:14px;">
+    <div style="width:40px;height:40px;background:#FF9900;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#1A1A2E;text-align:center;line-height:1.3;flex-shrink:0;">INS<br>PACK</div>
+    <div>
+      <div style="font-size:15px;font-weight:600;color:#fff;">Panel de Administración</div>
+      <div style="font-size:11px;color:#FF9900;margin-top:2px;">Seguimiento de candidatos · DMZ4</div>
+    </div>
+  </div>
+
+  <div id="admin-body" style="background:#fff;border-radius:0 0 12px 12px;padding:22px;border:1px solid #e0e0e0;border-top:none;">
+
+    <!-- Login -->
+    <div id="admin-login">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:32px;margin-bottom:8px;">🔐</div>
+        <div style="font-size:15px;font-weight:600;color:#111;margin-bottom:4px;">Acceso restringido</div>
+        <div style="font-size:13px;color:#666;">Solo para el equipo de Instapack</div>
+      </div>
+      <label style="font-size:13px;font-weight:500;color:#555;margin-bottom:6px;display:block;">Contraseña</label>
+      <input type="password" id="admin-pwd" placeholder="Contraseña de administrador"
+        style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;"
+        onkeydown="if(event.key==='Enter')adminLogin()"
+        onfocus="this.style.borderColor='#FF9900'" onblur="this.style.borderColor='#ddd'" />
+      <button onclick="adminLogin()"
+        style="width:100%;padding:11px;background:#1A1A2E;color:#FF9900;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">
+        Entrar al panel →
+      </button>
+      <div id="admin-pwd-err" style="font-size:12px;color:#c0392b;margin-top:6px;min-height:16px;"></div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="admin-dashboard" style="display:none;">
+
+      <!-- Stats -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div style="font-size:15px;font-weight:600;color:#111;">Resumen general</div>
+        <button onclick="renderDashboard()"
+          style="background:transparent;border:1px solid #ddd;border-radius:8px;padding:6px 12px;font-size:12px;color:#666;cursor:pointer;">
+          ↻ Actualizar
+        </button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
+        <div style="background:#f5f5f5;border:1px solid #ddd;border-radius:10px;padding:14px 10px;text-align:center;">
+          <div id="stat-total" style="font-size:28px;font-weight:700;color:#111;line-height:1;">0</div>
+          <div style="font-size:11px;font-weight:600;color:#555;margin-top:4px;">Convocados</div>
+        </div>
+        <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 10px;text-align:center;">
+          <div id="stat-acepta" style="font-size:28px;font-weight:700;color:#1A6B3C;line-height:1;">0</div>
+          <div style="font-size:11px;font-weight:600;color:#1A6B3C;margin-top:4px;">Aceptaron</div>
+        </div>
+        <div style="background:#FDEDEC;border:1px solid #F5B7B1;border-radius:10px;padding:14px 10px;text-align:center;">
+          <div id="stat-rechaza" style="font-size:28px;font-weight:700;color:#922B21;line-height:1;">0</div>
+          <div style="font-size:11px;font-weight:600;color:#922B21;margin-top:4px;">Rechazaron</div>
+        </div>
+      </div>
+
+      <!-- Candidate list -->
+      <div style="font-size:12px;font-weight:600;color:#888;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:10px;">Estado por candidato</div>
+      <div id="admin-clist"></div>
+
+      <div style="height:1px;background:#eee;margin:16px 0;"></div>
+
+      <!-- Legend -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:11px;">
+        <span style="background:#EAF7EF;border:1px solid #A9DFBF;color:#1A6B3C;font-weight:600;padding:3px 9px;border-radius:20px;">Verde = Aceptó</span>
+        <span style="background:#FDEDEC;border:1px solid #F5B7B1;color:#922B21;font-weight:600;padding:3px 9px;border-radius:20px;">Rojo = Rechazó</span>
+        <span style="background:#FFF3E0;border:1px solid #FFCC80;color:#E65100;font-weight:600;padding:3px 9px;border-radius:20px;">Naranja = Descartado</span>
+        <span style="background:#FFFDE7;border:1px solid #FDD835;color:#5D4037;font-weight:600;padding:3px 9px;border-radius:20px;">Amarillo = Sin respuesta</span>
+      </div>
+
+      <div style="margin-top:16px;padding:12px 14px;background:#FFF8EC;border:1px solid #FDEBD0;border-radius:8px;font-size:12px;color:#7A4500;line-height:1.6;">
+        <b>Notificaciones por email:</b> Cada respuesta llega automáticamente a <b>colpa_7@hotmail.com</b>. Para ver el historial completo accede a <b>formspree.io</b> → tu formulario → Submissions.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── ADMIN LOGIC ──────────────────────────────────────────────────────────────
+var ADMIN_PWD = 'Instapack2026';
+
+var ALL_CANDS = [
+  {n:'Jesus Rivera Aguilera',      e:'JOB AND TALENT'},
+  {n:'Daniel Mendez',              e:'JOB AND TALENT'},
+  {n:'Raul Gil Garcia',            e:'JOB AND TALENT'},
+  {n:'Ayoub Taieboune',            e:'JOB AND TALENT'},
+  {n:'Iker Alcocer Cruz',          e:'JOB AND TALENT'},
+  {n:'Raquel Daganzo Gallego',     e:'JOB AND TALENT'},
+  {n:'Alberto Toribio Santos',     e:'JOB AND TALENT'},
+  {n:'Fikri El Mossaoui',          e:'JOB AND TALENT'},
+  {n:'Juan Jose Alamo Pacheco',    e:'GI GROUP'},
+  {n:'Amparo Garrido Fernandez',   e:'GI GROUP'},
+  {n:'Alex Ballestero Baro',       e:'GI GROUP'},
+  {n:'Ricardo Iglesias Fernandez', e:'GI GROUP'},
+  {n:'Jidahia Campo Mendoza',      e:'GI GROUP'},
+  {n:'Mostafa Sbihi',              e:'GI GROUP'},
+  {n:'Mohamed Talibe Diallo Diaoune', e:'ADECCO'},
+  {n:'Daniel Navarrete Vargas',    e:'ADECCO'},
+  {n:'Sergio Diaz Bonilla',        e:'ADECCO'}
+];
+
+// Show admin panel if URL contains #admin
+if(window.location.hash === '#admin'){
+  document.getElementById('admin-wrap').style.display = 'block';
+  var mainC = document.querySelector('.container');
+  if(mainC) mainC.style.display = 'none';
+}
+
+function adminLogin(){
+  var v = document.getElementById('admin-pwd').value;
+  if(v === ADMIN_PWD){
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-dashboard').style.display = 'block';
+    renderDashboard();
+  } else {
+    document.getElementById('admin-pwd-err').textContent = 'Contraseña incorrecta.';
+  }
+}
+
+async function renderDashboard(){
+  var listEl = document.getElementById('admin-clist');
+  listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:13px;">Cargando respuestas desde Netlify...</div>';
+
+  // Read from Formspree API
+  var FORMSPREE_ID = 'xpwzgkqb';
+  var submissions = [];
+
+  try{
+    var resp = await fetch('https://formspree.io/api/0/forms/'+FORMSPREE_ID+'/submissions?per_page=100', {
+      headers:{'Accept':'application/json'}
+    });
+    var data = await resp.json();
+    submissions = data.submissions || [];
+  } catch(e){
+    listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#c0392b;font-size:13px;">Error al conectar. Comprueba tu conexión.</div>';
+    return;
+  }
+
+  // Build map: nombre -> latest submission
+  var respMap = {};
+  for(var s of submissions){
+    var d = s.answers || s || {};
+    var nombreVal = d.nombre || (d.find && (d.find(function(x){return x.field==='nombre';})||{}).value) || '';
+    var respVal   = d.respuesta || (d.find && (d.find(function(x){return x.field==='respuesta';})||{}).value) || '';
+    var fechaVal  = d.fecha || (s.submitted_at||'').substring(0,16).replace('T',' ');
+    if(nombreVal){
+      var choiceKey = respVal.toUpperCase().includes('ACEPTA') ? 'acepta' :
+                      respVal.toUpperCase().includes('RECHAZA') ? 'rechaza' : 'descartado';
+      if(!respMap[nombreVal] || (s.submitted_at||'') > (respMap[nombreVal]._at||'')){
+        respMap[nombreVal] = { choice: choiceKey, fecha: fechaVal, _at: s.submitted_at||'' };
+      }
+    }
+  }
+
+  var na=0, nr=0, html='';
+  for(var c of ALL_CANDS){
+    var resp = respMap[c.n];
+    var bgc, bdc, badge, badgeStyle, fecha='';
+    if(!resp){
+      bgc='#FFFDE7'; bdc='#FDD835'; badge='Sin respuesta';
+      badgeStyle='background:#F9A825;color:#5D4037;';
+    } else if(resp.choice==='acepta'){
+      bgc='#EAF7EF'; bdc='#A9DFBF'; badge='Aceptó'; fecha=resp.fecha;
+      badgeStyle='background:#1A6B3C;color:#fff;'; na++;
+    } else if(resp.choice==='descartado'){
+      bgc='#FFF3E0'; bdc='#FFCC80'; badge='Descartado'; fecha=resp.fecha;
+      badgeStyle='background:#E65100;color:#fff;'; nr++;
+    } else {
+      bgc='#FDEDEC'; bdc='#F5B7B1'; badge='Rechazó'; fecha=resp.fecha;
+      badgeStyle='background:#922B21;color:#fff;'; nr++;
+    }
+    html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;margin-bottom:6px;border:1px solid '+bdc+';background:'+bgc+';">'
+          + '<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:#111;">'+c.n+'</div>'
+          + '<div style="font-size:11px;color:#666;">'+c.e+'</div></div>'
+          + (fecha?'<div style="font-size:10px;color:#888;flex-shrink:0;">'+fecha+'</div>':'')
+          + '<span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;flex-shrink:0;'+badgeStyle+'">'+badge+'</span>'
+          + '</div>';
+  }
+  document.getElementById('stat-total').textContent  = ALL_CANDS.length;
+  document.getElementById('stat-acepta').textContent = na;
+  document.getElementById('stat-rechaza').textContent= nr;
+  document.getElementById('admin-clist').innerHTML   = html;
+}
+</script>
+</body>
+</html>
