@@ -160,10 +160,11 @@
       <!-- Q2: Vehiculo -->
       <div id="q2" class="hidden">
         <div class="step-label">Requisito 2 de 3</div>
-        <div class="bubble"><div class="bot-name">Asistente Instapack</div>¿Tienes <b>vehículo propio</b> para desplazarte a la nave de Getafe? El transporte público es muy escaso en esa zona.</div>
+        <div class="bubble"><div class="bot-name">Asistente Instapack</div>¿Tienes <b>vehículo propio</b> para desplazarte a la nave de Getafe?<br><br>⚠️ <b>Importante:</b> El transporte público en la zona es muy escaso. Si vienes en transporte público, debes garantizar la <b>puntualidad absoluta</b> al puesto de trabajo.</div>
         <div class="options">
           <div class="opt" onclick="selectQ(2,this,true)"><div class="radio"></div>Sí, tengo vehículo propio</div>
-          <div class="opt" onclick="selectQ(2,this,false)"><div class="radio"></div>No tengo vehículo propio</div>
+          <div class="opt" onclick="selectQ(2,this,'transport')"><div class="radio"></div>No, vendría en transporte público — acepto llegar puntual</div>
+          <div class="opt" onclick="selectQ(2,this,false)"><div class="radio"></div>No tengo vehículo y no puedo garantizar la puntualidad</div>
         </div>
         <button class="btn-primary" id="btn-q2" disabled onclick="nextQ(2)">Siguiente →</button>
       </div>
@@ -373,7 +374,7 @@
             </div>
             <div style="display:flex;align-items:center;gap:12px;background:#1A1A2E;border-radius:10px;padding:12px 14px;">
               <div style="background:#FF9900;color:#1A1A2E;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0;text-align:center;min-width:62px;">Día 12+</div>
-              <div style="font-size:13px;color:#FF9900;"><b>Conductor/a experto/a</b> — 100% autónomo + incentivo 5€/día</div>
+              <div style="font-size:13px;color:#FF9900;"><b style="color:#FFD700;">Conductor/a experto/a</b> — 100% autónomo + incentivo 5€/día</div>
             </div>
           </div>
         </div>
@@ -395,6 +396,10 @@
             <div style="display:flex;gap:10px;justify-content:center;">
               <button onclick="responder('acepta')" id="btn-acepta" style="background:#27AE60;color:white;border:none;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;flex:1;max-width:160px;">✓ Acepto</button>
               <button onclick="responder('rechaza')" id="btn-rechaza" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;flex:1;max-width:160px;">✗ No me interesa</button>
+            </div>
+            <div style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5;">
+              👆 Pulsa uno de los botones para que tu respuesta quede registrada y nos llegue correctamente.
+            </div>
             </div>
             <div id="respuesta-final" style="margin-top:14px;font-size:13px;min-height:20px;"></div>
           </div>
@@ -542,9 +547,11 @@ function selectQ(q, el, val){
   var parent = document.getElementById('q'+q);
   parent.querySelectorAll('.opt').forEach(function(o){ o.classList.remove('selected'); });
   el.classList.add('selected');
-  if(q===1) state.q1ok=val;
-  if(q===2) state.q2ok=val;
-  if(q===3) state.q3ok=val;
+  // 'transport' counts as valid (true) but we note it
+  var okVal = (val === 'transport') ? true : val;
+  if(q===1) state.q1ok=okVal;
+  if(q===2){ state.q2ok=okVal; state.transporte=(val==='transport'); }
+  if(q===3) state.q3ok=okVal;
   if(q===4){
     state.amazonExp=val;
     val==='si' ? show('q4-extra') : hide('q4-extra');
@@ -562,7 +569,7 @@ function nextQ(q){
     setProgress(100);
     // Send rejection notification via Formspree
     var c = state.candidate;
-    var motivos = ['Carnet < 6 meses','Sin vehículo propio','Sin disponibilidad fines de semana'];
+    var motivos = ['Carnet < 6 meses','Sin vehículo y sin garantía de puntualidad','Sin disponibilidad fines de semana'];
     var motivo = motivos[q-1];
     var now2 = new Date();
     var f2 = now2.getDate().toString().padStart(2,'0')+'/'+
@@ -628,7 +635,7 @@ function buildOffer(){
     ['Nombre', c.nombre],
     ['ETT', c.ett],
     ['Carnet', 'Más de 6 meses ✓'],
-    ['Vehículo', 'Propio ✓'],
+    ['Vehículo', state.transporte ? 'Transporte público — Compromiso de puntualidad ✓' : 'Propio ✓'],
     ['Disponibilidad', 'Fines de semana ✓'],
   ];
   if(state.amazonExp==='si'){
