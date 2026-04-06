@@ -488,11 +488,18 @@ function checkDni(){
 }
 
 function enviarFormspree(data, callback){
+  // Enviar a Google Sheets via Apps Script
+  fetch('https://script.google.com/macros/s/AKfycbx7nbqNy5fZPWYFGIJ_jFmqrqBIJPjg8mfn7ZkDczhowAm1vZepUa9RyUhsyxG9jNxA/exec', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  }).then(callback).catch(callback);
+  // Enviar a Formspree para notificacion email
   fetch('https://formspree.io/f/mreojzlv', {
     method: 'POST',
     headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
     body: JSON.stringify(data)
-  }).then(callback).catch(callback);
+  }).catch(function(){});
 }
 
 function goS2(){
