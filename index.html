@@ -493,17 +493,19 @@ function checkDni(){
 }
 
 function enviarFormspree(data, callback){
-  // Enviar a Google Sheets via imagen (evita CORS)
+  // Build URL with query params and use no-cors fetch
   var params = Object.keys(data).map(function(k){
-    return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+    return encodeURIComponent(k) + '=' + encodeURIComponent(data[k] || '');
   }).join('&');
-  var img = new Image();
-  img.src = 'https://script.google.com/macros/s/AKfycbxBsmsGIw-UQPyH5d6vV_uh-WRlQ_O5OfbZm7b5XWQCDAhYl9MWi49Yuc4AEYmvSXjJ/exec?callback=ok&' + params;
-  img.onload = callback;
-  img.onerror = callback;
-  setTimeout(callback, 3000);
+  var url = 'https://script.google.com/macros/s/AKfycbxBsmsGIw-UQPyH5d6vV_uh-WRlQ_O5OfbZm7b5XWQCDAhYl9MWi49Yuc4AEYmvSXjJ/exec?' + params;
 
-  // Enviar a Formspree para notificacion email
+  fetch(url, { method: 'GET', mode: 'no-cors' })
+    .then(function(){ callback(); })
+    .catch(function(){ callback(); });
+
+  setTimeout(callback, 4000);
+
+  // Formspree para email
   fetch('https://formspree.io/f/mreojzlv', {
     method: 'POST',
     headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
