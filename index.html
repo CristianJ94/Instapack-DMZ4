@@ -1211,7 +1211,8 @@ function agenteAddMsg(role, text, typing){
     (typing ? '<span style="opacity:0.5;">escribiendo...</span>' : text) + '</div>';
   div.id = typing ? 'typing-msg' : '';
   chat.appendChild(div);
-  // Scroll only inside chat box, NOT the whole page
+  // Only scroll when user sends, not when bot responds
+  if(!isBot){ chat.scrollTop = chat.scrollHeight; }
   if(isBot && !typing && text){
     encolarVoz(text);
   }
