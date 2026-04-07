@@ -273,7 +273,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           </div>
 
           <!-- Chat -->
-          <div id="agente-chat" style="min-height:80px;max-height:240px;overflow-y:auto;margin-bottom:12px;"></div>
+          <div id="agente-chat" style="min-height:80px;max-height:400px;overflow-y:auto;margin-bottom:12px;scroll-behavior:auto;"></div>
 
           <!-- Input -->
           <div style="display:flex;gap:8px;">
@@ -1123,7 +1123,7 @@ function leerTexto(texto){
   var v = getVoz();
   if(v) u.voice = v;
   u.lang = 'es-ES';
-  u.rate = 0.95;
+  u.rate = 0.82;
   u.pitch = 1.05;
   u.volume = 1;
   u.onend = function(){
@@ -1211,7 +1211,7 @@ function agenteAddMsg(role, text, typing){
     (typing ? '<span style="opacity:0.5;">escribiendo...</span>' : text) + '</div>';
   div.id = typing ? 'typing-msg' : '';
   chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
+  // Scroll only inside chat box, NOT the whole page
   if(isBot && !typing && text){
     encolarVoz(text);
   }
@@ -1246,7 +1246,6 @@ async function startAgente(){
     typing.style.cssText = 'margin-bottom:10px;display:flex;gap:8px;align-items:center;';
     typing.innerHTML = '<div style="font-size:14px;flex-shrink:0;">🤖</div><div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;font-size:13px;color:rgba(255,255,255,0.5);">escribiendo...</div>';
     chat.appendChild(typing);
-    chat.scrollTop = chat.scrollHeight;
     await new Promise(function(r){ setTimeout(r, 900); });
     var t = document.getElementById('typing-msg');
     if(t) t.remove();
@@ -1278,6 +1277,7 @@ function sendAgente(){
   typing.style.cssText = 'margin-bottom:10px;display:flex;gap:8px;align-items:center;';
   typing.innerHTML = '<div style="font-size:15px;flex-shrink:0;">🤖</div><div style="background:rgba(255,255,255,0.09);border-radius:8px;padding:9px 13px;font-size:13px;color:rgba(255,255,255,0.4);">escribiendo...</div>';
   chat.appendChild(typing);
+  // Only scroll inside chat, not whole page
   chat.scrollTop = chat.scrollHeight;
 
   setTimeout(function(){
