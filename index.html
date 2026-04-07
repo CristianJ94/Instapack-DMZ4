@@ -247,21 +247,34 @@
       <!-- AGENTE IA -->
       <div id="agente-wrap" style="margin-bottom:20px;">
         <div style="background:linear-gradient(135deg,#1A1A2E 0%,#232F3E 100%);border-radius:12px;padding:16px 18px;">
+
+          <!-- Header -->
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-            <div style="width:36px;height:36px;background:#FF9900;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
+            <div style="width:38px;height:38px;background:#FF9900;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🤖</div>
             <div style="flex:1;">
               <div style="font-size:13px;font-weight:700;color:#FF9900;">InstaBot · Asistente Instapack</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.5);">Con IA · Online ahora</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.5);">Asistente virtual · Online</div>
             </div>
-            <button id="btn-voz" onclick="toggleVoz()" style="background:rgba(255,153,0,0.3);color:#FF9900;border:1px solid rgba(255,153,0,0.4);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;">🔊 Voz</button>
+            <button id="btn-voz"
+              onclick="toggleVoz()"
+              style="background:rgba(255,153,0,0.25);color:#FF9900;border:1.5px solid rgba(255,153,0,0.5);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;outline:none;">
+              🔊 Voz ON
+            </button>
           </div>
-          <div id="agente-chat" style="min-height:60px;max-height:220px;overflow-y:auto;margin-bottom:12px;"></div>
-          <div id="agente-input-wrap" style="display:flex;gap:8px;">
-            <input type="text" id="agente-input" placeholder="Escribe tu pregunta sobre el puesto..."
-              style="flex:1;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-size:13px;outline:none;"
+
+          <!-- Chat -->
+          <div id="agente-chat" style="min-height:80px;max-height:240px;overflow-y:auto;margin-bottom:12px;"></div>
+
+          <!-- Input -->
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="agente-input"
+              placeholder="Escribe tu pregunta aquí..."
+              style="flex:1;padding:10px 13px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-size:13px;outline:none;"
               onkeydown="if(event.key==='Enter')sendAgente()" />
             <button onclick="sendAgente()"
-              style="background:#FF9900;color:#1A1A2E;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;">Enviar</button>
+              style="background:#FF9900;color:#1A1A2E;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;">
+              ➤
+            </button>
           </div>
         </div>
       </div>
@@ -748,6 +761,7 @@ function changeSlide(dir){
 }
 
 function responder(choice){
+  desbloquearAudio();
   var c = state.candidate;
   var btnA = document.getElementById('btn-acepta');
   var btnR = document.getElementById('btn-rechaza');
@@ -1068,60 +1082,61 @@ var agenteStarted = false;
 
 // ── VOZ INSTABOT ─────────────────────────────────────────────────────────────
 var vozActiva = true;
-var vozSynth = window.speechSynthesis;
-var vozElegida = null;
+var synth = window.speechSynthesis;
+var vozEsp = null;
+var vozDesbloqueada = false;
 
-function elegirVoz(){
-  if(vozElegida) return;
-  var voces = vozSynth.getVoices();
-  // Priority: Spanish female voices, most human-sounding
-  var preferidas = [
-    'Google español', 'Monica', 'Paulina', 'Luciana',
-    'es-ES', 'es-MX', 'es-US', 'es_ES', 'es_MX',
-    'Microsoft Sabina', 'Microsoft Laura', 'Microsoft Helena'
-  ];
-  for(var p of preferidas){
-    var v = voces.find(function(x){ return x.name.includes(p) || x.lang.startsWith(p); });
-    if(v){ vozElegida = v; break; }
+function cargarVoces(){
+  var voces = synth.getVoices();
+  if(!voces.length) return;
+  var prioridad = ['Google español de Estados Unidos','Google español','Monica','Paulina','Luciana','Microsoft Sabina','Microsoft Helena','Microsoft Laura'];
+  for(var p of prioridad){
+    var v = voces.find(function(x){ return x.name.toLowerCase().includes(p.toLowerCase()); });
+    if(v){ vozEsp = v; break; }
   }
-  // Fallback: any Spanish voice
-  if(!vozElegida){
-    vozElegida = voces.find(function(x){ return x.lang.startsWith('es'); });
-  }
+  if(!vozEsp) vozEsp = voces.find(function(x){ return x.lang && x.lang.toLowerCase().startsWith('es'); });
 }
 
-// Load voices (needed for Chrome)
-if(vozSynth.onvoiceschanged !== undefined){
-  vozSynth.onvoiceschanged = elegirVoz;
+synth.onvoiceschanged = cargarVoces;
+cargarVoces();
+
+function desbloquearAudio(){
+  if(vozDesbloqueada) return;
+  vozDesbloqueada = true;
+  var u = new SpeechSynthesisUtterance(' ');
+  u.volume = 0;
+  synth.speak(u);
 }
-elegirVoz();
 
 function hablar(texto){
   if(!vozActiva) return;
-  // Strip HTML tags for speech
-  var textoLimpio = texto.replace(/<[^>]*>/g, '').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').trim();
-  if(!textoLimpio) return;
-  vozSynth.cancel();
-  var utt = new SpeechSynthesisUtterance(textoLimpio);
-  elegirVoz();
-  if(vozElegida) utt.voice = vozElegida;
-  utt.lang = 'es-ES';
-  utt.rate = 0.92;   // Slightly slower = more natural
-  utt.pitch = 1.05;  // Slightly higher = warmer
-  utt.volume = 1;
-  vozSynth.speak(utt);
+  cargarVoces();
+  var limpio = texto.replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+  if(!limpio) return;
+  synth.cancel();
+  var u = new SpeechSynthesisUtterance(limpio);
+  if(vozEsp) u.voice = vozEsp;
+  u.lang = 'es-ES';
+  u.rate = 0.9;
+  u.pitch = 1.1;
+  u.volume = 1;
+  synth.speak(u);
 }
 
 function toggleVoz(){
   vozActiva = !vozActiva;
   var btn = document.getElementById('btn-voz');
-  if(!vozActiva){
-    vozSynth.cancel();
-    btn.textContent = '🔇 Voz';
-    btn.style.background = 'rgba(255,255,255,0.08)';
+  if(vozActiva){
+    btn.textContent = '🔊 Voz ON';
+    btn.style.background = 'rgba(255,153,0,0.25)';
+    btn.style.borderColor = 'rgba(255,153,0,0.5)';
+    btn.style.color = '#FF9900';
   } else {
-    btn.textContent = '🔊 Voz';
-    btn.style.background = 'rgba(255,153,0,0.3)';
+    synth.cancel();
+    btn.textContent = '🔇 Voz OFF';
+    btn.style.background = 'rgba(255,255,255,0.05)';
+    btn.style.borderColor = 'rgba(255,255,255,0.2)';
+    btn.style.color = 'rgba(255,255,255,0.4)';
   }
 }
 
@@ -1130,14 +1145,13 @@ function agenteAddMsg(role, text, typing){
   var div = document.createElement('div');
   div.style.cssText = 'margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;';
   var isBot = role === 'assistant';
-  div.innerHTML = (isBot ? '<div style="font-size:14px;flex-shrink:0;">🤖</div>' : '<div style="font-size:14px;flex-shrink:0;">👤</div>') +
-    '<div style="background:' + (isBot ? 'rgba(255,255,255,0.08)' : 'rgba(255,153,0,0.15)') + ';border-radius:8px;padding:8px 12px;font-size:13px;color:#fff;line-height:1.6;flex:1;">' +
-    (typing ? '<span id="typing-indicator">...</span>' : text) + '</div>';
+  div.innerHTML = (isBot ? '<div style="font-size:15px;flex-shrink:0;">🤖</div>' : '<div style="font-size:15px;flex-shrink:0;">👤</div>') +
+    '<div style="background:' + (isBot ? 'rgba(255,255,255,0.09)' : 'rgba(255,153,0,0.18)') + ';border-radius:8px;padding:9px 13px;font-size:13px;color:#fff;line-height:1.65;flex:1;">' +
+    (typing ? '<span style="opacity:0.5;">escribiendo...</span>' : text) + '</div>';
   div.id = typing ? 'typing-msg' : '';
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
-  // Speak bot messages
-  if(isBot && !typing && text) hablar(text);
+  if(isBot && !typing && text){ hablar(text); }
   return div;
 }
 
@@ -1182,6 +1196,7 @@ async function startAgente(){
 
 
 async function sendAgente(){
+  desbloquearAudio();
   var input = document.getElementById('agente-input');
   var text = input.value.trim();
   if(!text) return;
