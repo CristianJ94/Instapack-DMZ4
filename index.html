@@ -1123,7 +1123,7 @@ function leerTexto(texto){
   var v = getVoz();
   if(v) u.voice = v;
   u.lang = 'es-ES';
-  u.rate = 1.08;
+  u.rate = 0.95;
   u.pitch = 1.05;
   u.volume = 1;
   u.onend = function(){
@@ -1258,65 +1258,34 @@ async function startAgente(){
 }
 
 
-async function sendAgente(){
+function sendAgente(){
   desbloquearAudio();
   var input = document.getElementById('agente-input');
   var text = input.value.trim();
   if(!text) return;
   input.value = '';
-  input.disabled = true;
 
   agenteAddMsg('user', text);
-  agenteHistory.push({role:'user', content: text});
 
-  agenteAddMsg('assistant', '', true);
+  // Remove typing indicator if exists
+  var t = document.getElementById('typing-msg');
+  if(t) t.remove();
 
-  var c = state.candidate;
-  var systemPrompt = "Eres el asistente virtual de Instapack, empresa colaboradora de Amazon Logistics en Getafe (DMZ4). " +
-    "Tu misión es presentar la oferta de trabajo de repartidor/a de paquetería de forma entusiasta, cercana y atractiva. " +
-    "Hablas en español, eres amigable y motivador. El candidato se llama " + c.nombre + " y su ETT es " + c.ett + ". " +
-    "Datos clave de la oferta: entrada a las 10:00h, rutas de 9h, siempre cobran 9h aunque terminen antes o tarden más, " +
-    "zona de reparto: Villaverde Alto y Bajo, Getafe Centro, zona norte de Getafe, Los Molinos, Villa de Vallecas y Perales del Río, " +
-    "cuadrantes cada martes via app WOFFU, 2 días de descanso rotativos a la semana, furgoneta y terminal propios de la empresa, " +
-    "formación online de 8h (9:00-16:30) + día en ruta con compañero, plan escalonado 11 días (días 1-3: 60%, días 4-7: 75%, días 7-11: 90%), " +
-    "conductor experto desde día 12: 100% autónomo + incentivo de 5€/día sin paquetería pendiente abonado en nómina a final de mes. " +
-    "Las rutas siempre hay que terminarlas. La furgoneta no se puede llevar a casa. " +
-    "Para temas de salario remitir a su ETT (" + c.ett + "). " +
-    "Responde de forma positiva, motivadora y concisa. Máximo 3-4 líneas por respuesta.";
+  // Show typing briefly
+  var chat = document.getElementById('agente-chat');
+  var typing = document.createElement('div');
+  typing.id = 'typing-msg';
+  typing.style.cssText = 'margin-bottom:10px;display:flex;gap:8px;align-items:center;';
+  typing.innerHTML = '<div style="font-size:15px;flex-shrink:0;">🤖</div><div style="background:rgba(255,255,255,0.09);border-radius:8px;padding:9px 13px;font-size:13px;color:rgba(255,255,255,0.4);">escribiendo...</div>';
+  chat.appendChild(typing);
+  chat.scrollTop = chat.scrollHeight;
 
-  try {
-    // Use allorigins proxy to bypass CORS
-    var payload = JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 300,
-      system: systemPrompt,
-      messages: agenteHistory
-    });
-    var proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.anthropic.com/v1/messages');
-    var resp = await fetch(proxyUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': 'sk-ant-api03-placeholder',
-        'anthropic-version': '2023-06-01'
-      },
-      body: payload
-    });
-    var data = await resp.json();
-    var reply = data.content && data.content[0] ? data.content[0].text : agenteRespuestaLocal(text);
-    agenteHistory.push({role:'assistant', content: reply});
-    var typingEl = document.getElementById('typing-msg');
-    if(typingEl) typingEl.remove();
-    agenteAddMsg('assistant', reply);
-  } catch(e) {
-    var typingEl = document.getElementById('typing-msg');
-    if(typingEl) typingEl.remove();
-    agenteAddMsg('assistant', agenteRespuestaLocal(text));
-  }
-
-  input.disabled = false;
-  input.focus();
+  setTimeout(function(){
+    var t2 = document.getElementById('typing-msg');
+    if(t2) t2.remove();
+    var respuesta = agenteRespuestaLocal(text);
+    agenteAddMsg('assistant', respuesta);
+  }, 800);
 }
-</script>
-</body>
-</html>
+
+
