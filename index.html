@@ -1074,7 +1074,16 @@ function agenteRespuestaLocal(pregunta){
     return '⭐ Una vez seas conductor/a experto/a (día 12), <b>cada día que termines sin paquetería pendiente te llevás 5€ extra</b> que se acumulan y se abonan en nómina a final de mes. ¡Un motivador real!';
   }
   if(p.includes('contrato') || p.includes('tipo') || p.includes('indefinido') || p.includes('temporal')){
-    return '📋 Las condiciones del contrato las gestiona tu ETT ' + (c ? '(' + c.ett + ')' : '') + '. Ellos te explicarán el tipo de contrato, duración y todos los detalles legales.';
+    return 'Las condiciones del contrato las gestiona tu ETT ' + (c ? '(' + c.ett + ')' : '') + '. Ellos te explicaran el tipo de contrato, duracion y todos los detalles legales.';
+  }
+  if(p.includes('libranza') || p.includes('libran') || p.includes('libre') || p.includes('descanso') && (p.includes('junto') || p.includes('seguido') || p.includes('correla') || p.includes('separa') || p.includes('dias')) ){
+    return 'Las libranzas las asigna el jefe de trafico encargado cada semana segun las necesidades del servicio. No tienen por que ser dias correlativos, pueden ser separados o juntos dependiendo del cuadrante semanal.';
+  }
+  if(p.includes('sueldo') || p.includes('salario') || p.includes('cobra') || p.includes('paga') || p.includes('nomina') || p.includes('dinero') || p.includes('cobro') || p.includes('cuando cobro') || p.includes('dia de pago') || p.includes('cuanto gano') || p.includes('cuanto cobro') || p.includes('ingreso')){
+    return 'Todo lo relacionado con el salario, dias de cobro y condiciones economicas te lo comunicara directamente tu ETT ' + (c ? '(' + c.ett + ')' : '') + '. Ellos son quienes gestionan tu contrato y nomina.';
+  }
+  if(p.includes('formacion') || p.includes('fecha') || p.includes('cuando empezo') || p.includes('cuando start') || p.includes('inicio') || p.includes('comienzo') || p.includes('alta') || p.includes('incorpora') || p.includes('cuando empiezo') || p.includes('cuando me avisan') || p.includes('cuando me llaman')){
+    return 'La fecha de inicio de la formacion y de incorporacion te la comunicaremos nosotros por este mismo WhatsApp. Primero tenemos que crear tu cuenta en el sistema, es un proceso que lleva unos dias. Pero tranquilo, te avisamos con tiempo. Las fechas maximas te las enviaremos por WhatsApp al finalizar esta encuesta.';
   }
   if(p.includes('woffu') || p.includes('app') || p.includes('aplicacion') || p.includes('fichar')){
     return '📱 WOFFU es la app donde verás tu cuadrante semanal y <b>debes fichar la entrada y salida</b> cada día. Te daremos acceso desde tu primer día de trabajo.';
