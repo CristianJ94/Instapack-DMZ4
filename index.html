@@ -1113,7 +1113,7 @@ function leerTexto(texto){
   var v = getVoz();
   if(v) u.voice = v;
   u.lang = 'es-ES';
-  u.rate = 0.88;
+  u.rate = 1.05;
   u.pitch = 1.05;
   u.volume = 1;
   u.onend = function(){
@@ -1136,7 +1136,16 @@ function procesarCola(){
 }
 
 function encolarVoz(texto){
-  var limpio = texto.replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+  // Remove HTML tags
+  var limpio = texto.replace(/<[^>]*>/g,'');
+  // Remove emojis and special unicode symbols
+  limpio = limpio.replace(/[\u{1F000}-\u{1FFFF}]/gu, '');
+  limpio = limpio.replace(/[\u{2600}-\u{27FF}]/gu, '');
+  limpio = limpio.replace(/[\u{1F300}-\u{1F9FF}]/gu, '');
+  limpio = limpio.replace(/[\u2702-\u27B0]/g, '');
+  limpio = limpio.replace(/[\uE000-\uF8FF]/g, '');
+  // Clean up extra spaces
+  limpio = limpio.replace(/\s+/g,' ').trim();
   if(!limpio) return;
   colaMsgs.push(limpio);
   if(vozActiva && !leyendo) procesarCola();
