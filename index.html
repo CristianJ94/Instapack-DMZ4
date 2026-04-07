@@ -12,7 +12,12 @@
     --green: #27AE60; --green-bg: #EAF7EF; --red: #E74C3C; --red-bg: #FDEDEC;
     --blue-bg: #EBF5FB; --blue: #2980B9; --radius: 12px; --radius-sm: 8px;
   }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-bg); min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px 48px; }
+  @keyframes pulso {
+  0%   { box-shadow: 0 0 0 0 rgba(255,153,0,0.5); }
+  70%  { box-shadow: 0 0 0 8px rgba(255,153,0,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,153,0,0); }
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-bg); min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px 48px; }
   .container { width: 100%; max-width: 560px; }
   .header { background: var(--dark); border-radius: var(--radius) var(--radius) 0 0; padding: 20px 24px; display: flex; align-items: center; gap: 14px; }
   .logo { width: 44px; height: 44px; background: var(--orange); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: var(--dark); flex-shrink: 0; letter-spacing: 0.5px; text-align: center; line-height: 1.3; }
@@ -255,10 +260,15 @@
               <div style="font-size:13px;font-weight:700;color:#FF9900;">InstaBot · Asistente Instapack</div>
               <div style="font-size:11px;color:rgba(255,255,255,0.5);">Asistente virtual · Online</div>
             </div>
-            <button id="btn-voz"
-              onclick="toggleVoz()"
-              style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);border:1.5px solid rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;outline:none;">
-              🔇 Pulsa para voz
+            <button id="btn-activar-voz"
+              onclick="activarVoz()"
+              style="background:#FF9900;color:#1A1A2E;border:none;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;outline:none;animation:pulso 1.5s infinite;">
+              🔊 Escuchar
+            </button>
+            <button id="btn-parar-voz"
+              onclick="pararVoz()"
+              style="display:none;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;outline:none;">
+              🔇 Silencio
             </button>
           </div>
 
@@ -1081,91 +1091,84 @@ var agenteHistory = [];
 var agenteStarted = false;
 
 // ── VOZ INSTABOT ─────────────────────────────────────────────────────────────
-var synth = window.speechSynthesis;
-var vozEsp = null;
-var vozActiva = false;  // OFF by default - user must tap to enable (iOS requirement)
-var colaMensajes = [];
-var hablando = false;
+var vozActiva = false;
+var colaMsgs = [];
+var leyendo = false;
 
-function cargarVoces(){
-  var voces = synth.getVoices();
-  if(!voces.length) return;
-  var prioridad = [
-    'Paulina','Monica','Luciana','Google español',
-    'Microsoft Sabina','Microsoft Helena','Microsoft Laura',
-    'es-ES','es-MX','es-US'
-  ];
-  for(var p of prioridad){
-    var v = voces.find(function(x){
-      return x.name.toLowerCase().includes(p.toLowerCase()) || x.lang.toLowerCase().startsWith(p.toLowerCase());
-    });
-    if(v){ vozEsp = v; console.log('Voz elegida:', v.name); break; }
+function getVoz(){
+  var voces = speechSynthesis.getVoices();
+  var esp = voces.filter(function(v){ return v.lang && v.lang.startsWith('es'); });
+  // Prefer female voices
+  var femeninas = ['Paulina','Monica','Luciana','Sabina','Helena','Laura','Google español'];
+  for(var f of femeninas){
+    var v = esp.find(function(x){ return x.name.indexOf(f) > -1; });
+    if(v) return v;
   }
-  if(!vozEsp){
-    vozEsp = voces.find(function(x){ return x.lang && x.lang.toLowerCase().startsWith('es'); });
-    if(vozEsp) console.log('Voz fallback:', vozEsp.name);
-  }
+  return esp[0] || voces[0] || null;
 }
 
-if(synth.onvoiceschanged !== undefined){ synth.onvoiceschanged = cargarVoces; }
-setTimeout(cargarVoces, 500);
-
-function hablar(texto){
-  if(!vozActiva) return;
-  var limpio = texto.replace(/<[^>]*>/g,'').replace(/&[a-z]+;/gi,'').replace(/\s+/g,' ').trim();
-  if(!limpio) return;
-  colaMensajes.push(limpio);
-  if(!hablando) procesarCola();
+function leerTexto(texto){
+  if(!texto) return;
+  var u = new SpeechSynthesisUtterance(texto);
+  var v = getVoz();
+  if(v) u.voice = v;
+  u.lang = 'es-ES';
+  u.rate = 0.88;
+  u.pitch = 1.05;
+  u.volume = 1;
+  u.onend = function(){
+    leyendo = false;
+    setTimeout(procesarCola, 300);
+  };
+  u.onerror = function(){
+    leyendo = false;
+    setTimeout(procesarCola, 300);
+  };
+  leyendo = true;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
 }
 
 function procesarCola(){
-  if(!colaMensajes.length){ hablando = false; return; }
-  hablando = true;
-  var texto = colaMensajes.shift();
-  synth.cancel();
-  var u = new SpeechSynthesisUtterance(texto);
-  cargarVoces();
-  if(vozEsp) u.voice = vozEsp;
-  u.lang = 'es-ES';
-  u.rate = 0.88;
-  u.pitch = 1.08;
-  u.volume = 1;
-  u.onend = function(){ setTimeout(procesarCola, 400); };
-  u.onerror = function(){ setTimeout(procesarCola, 400); };
-  synth.speak(u);
+  if(leyendo || !colaMsgs.length || !vozActiva) return;
+  var texto = colaMsgs.shift();
+  leerTexto(texto);
 }
 
-function toggleVoz(){
-  var btn = document.getElementById('btn-voz');
-  if(!vozActiva){
-    // First tap - activate voice (required by iOS/Android)
-    vozActiva = true;
-    btn.textContent = '🔊 Voz ON';
-    btn.style.background = 'rgba(255,153,0,0.35)';
-    btn.style.color = '#FF9900';
-    btn.style.borderColor = 'rgba(255,153,0,0.7)';
-    // Speak a short silence to unlock audio context
-    cargarVoces();
-    var u = new SpeechSynthesisUtterance('Hola');
-    u.volume = 0.01;
-    u.rate = 2;
-    if(vozEsp) u.voice = vozEsp;
-    u.lang = 'es-ES';
-    u.onend = function(){
-      // Now read all queued messages
-      procesarCola();
-    };
-    synth.speak(u);
-  } else {
-    vozActiva = false;
-    hablando = false;
-    colaMensajes = [];
-    synth.cancel();
-    btn.textContent = '🔇 Voz OFF';
-    btn.style.background = 'rgba(255,255,255,0.05)';
-    btn.style.color = 'rgba(255,255,255,0.4)';
-    btn.style.borderColor = 'rgba(255,255,255,0.15)';
-  }
+function encolarVoz(texto){
+  var limpio = texto.replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+  if(!limpio) return;
+  colaMsgs.push(limpio);
+  if(vozActiva && !leyendo) procesarCola();
+}
+
+function activarVoz(){
+  vozActiva = true;
+  leyendo = false;
+  // Show/hide buttons
+  document.getElementById('btn-activar-voz').style.display = 'none';
+  document.getElementById('btn-parar-voz').style.display = 'inline-block';
+  // Unlock audio with a silent utterance first
+  var unlock = new SpeechSynthesisUtterance('.');
+  unlock.volume = 0.01;
+  unlock.rate = 2;
+  var v = getVoz();
+  if(v) unlock.voice = v;
+  unlock.lang = 'es-ES';
+  unlock.onend = function(){
+    // Now play queued messages
+    procesarCola();
+  };
+  speechSynthesis.speak(unlock);
+}
+
+function pararVoz(){
+  vozActiva = false;
+  leyendo = false;
+  colaMsgs = [];
+  speechSynthesis.cancel();
+  document.getElementById('btn-activar-voz').style.display = 'inline-block';
+  document.getElementById('btn-parar-voz').style.display = 'none';
 }
 
 function agenteAddMsg(role, text, typing){
@@ -1180,9 +1183,7 @@ function agenteAddMsg(role, text, typing){
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
   if(isBot && !typing && text){
-    // Always queue, hablar() will only play if vozActiva
-    colaMensajes.push(text.replace(/<[^>]*>/g,'').replace(/&[a-z]+;/gi,'').replace(/\s+/g,' ').trim());
-    if(vozActiva && !hablando) procesarCola();
+    encolarVoz(text);
   }
   return div;
 }
