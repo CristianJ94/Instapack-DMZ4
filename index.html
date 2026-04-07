@@ -250,7 +250,7 @@
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
             <div style="width:36px;height:36px;background:#FF9900;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
             <div>
-              <div style="font-size:13px;font-weight:700;color:#FF9900;">Asistente Virtual Instapack</div>
+              <div style="font-size:13px;font-weight:700;color:#FF9900;">InstaBot · Asistente Instapack</div>
               <div style="font-size:11px;color:rgba(255,255,255,0.5);">Con IA · Online ahora</div>
             </div>
           </div>
@@ -1015,6 +1015,52 @@ async function renderDashboard(){
   document.getElementById('admin-clist').innerHTML   = html;
 }
 
+
+function agenteRespuestaLocal(pregunta){
+  var p = pregunta.toLowerCase();
+  var c = state.candidate;
+  var nombre = c ? c.nombre.split(' ')[0] : '';
+
+  if(p.includes('hora') || p.includes('entrada') || p.includes('empez') || p.includes('llegar')){
+    return '⏰ La hora de entrada es a las <b>10:00h</b> cada día. Llegas a la nave de Getafe, fichás en WOFFU, coges tu furgoneta y ¡a repartir!';
+  }
+  if(p.includes('sueldo') || p.includes('salario') || p.includes('cobra') || p.includes('paga') || p.includes('dinero')){
+    return '💰 Cobras <b>9 horas fijas cada día</b> que trabajes, siempre, tanto si terminas antes como si tardas un poco más. Para el detalle del salario por hora consulta con tu ETT ' + (c ? '(' + c.ett + ')' : '') + '.';
+  }
+  if(p.includes('hora') || p.includes('9h') || p.includes('jornada') || p.includes('turno')){
+    return '🕙 Las rutas son de <b>9 horas</b>. Cuando terminas, llamas a tráfico, te autorizan el retorno y te puedes ir a casa. Siempre cobras las 9h completas.';
+  }
+  if(p.includes('zona') || p.includes('ruta') || p.includes('donde') || p.includes('barrio') || p.includes('reparto')){
+    return '🗺️ Repartirás por: <b>Villaverde Alto y Bajo, Getafe Centro, Zona Norte de Getafe, Los Molinos, Villa de Vallecas y Perales del Río</b>. ¡Zonas muy bien conectadas!';
+  }
+  if(p.includes('furgoneta') || p.includes('coche') || p.includes('vehiculo') || p.includes('llevar a casa')){
+    return '🚐 La empresa te proporciona <b>furgoneta, terminal y línea de teléfono</b>. La furgoneta queda aparcada en la nave al terminar la jornada, no se puede llevar a casa.';
+  }
+  if(p.includes('formacion') || p.includes('formación') || p.includes('curso') || p.includes('aprender')){
+    return '🎓 Primero haces una formación <b>online de 8h</b> (9:00-16:30h) que recibirás por WhatsApp. Luego un día en ruta con un compañero y ¡ya empiezas! Los primeros 11 días con carga progresiva para que te adaptes sin agobios.';
+  }
+  if(p.includes('descanso') || p.includes('libre') || p.includes('dia libre') || p.includes('festivo')){
+    return '📅 Tienes <b>2 días de descanso rotativos a la semana</b>. Cada martes recibes el cuadrante de la semana siguiente en la app WOFFU para que puedas organizarte.';
+  }
+  if(p.includes('incentivo') || p.includes('bonus') || p.includes('extra') || p.includes('5€') || p.includes('premio')){
+    return '⭐ Una vez seas conductor/a experto/a (día 12), <b>cada día que termines sin paquetería pendiente te llevás 5€ extra</b> que se acumulan y se abonan en nómina a final de mes. ¡Un motivador real!';
+  }
+  if(p.includes('contrato') || p.includes('tipo') || p.includes('indefinido') || p.includes('temporal')){
+    return '📋 Las condiciones del contrato las gestiona tu ETT ' + (c ? '(' + c.ett + ')' : '') + '. Ellos te explicarán el tipo de contrato, duración y todos los detalles legales.';
+  }
+  if(p.includes('woffu') || p.includes('app') || p.includes('aplicacion') || p.includes('fichar')){
+    return '📱 WOFFU es la app donde verás tu cuadrante semanal y <b>debes fichar la entrada y salida</b> cada día. Te daremos acceso desde tu primer día de trabajo.';
+  }
+  if(p.includes('amazon') || p.includes('paquete') || p.includes('paqueteria')){
+    return '📦 Trabajarás dentro de la red de <b>Amazon Logistics</b>, una de las mayores redes de reparto del mundo. Instapack es la empresa colaboradora que te gestiona en la estación DMZ4 de Getafe.';
+  }
+  if(p.includes('gracias') || p.includes('perfecto') || p.includes('ok') || p.includes('bien') || p.includes('genial')){
+    return '😊 ¡De nada ' + nombre + '! Estamos deseando tenerte en el equipo. Si tienes más dudas, aquí estoy. No olvides pulsar <b>Acepto</b> si quieres unirte a nosotros 🚀';
+  }
+  // Default - unknown question, redirect to WhatsApp
+  return '🤔 Esa pregunta se me escapa un poco, ' + nombre + '. Para que no te quedes con ninguna duda, <b>escríbenos directamente al número de WhatsApp desde el que recibiste este enlace</b> y te respondemos personalmente. ¡Estamos ahí para lo que necesites! 💬';
+}
+
 // ── AGENTE IA ─────────────────────────────────────────────────────────────
 var agenteHistory = [];
 var agenteStarted = false;
@@ -1037,27 +1083,41 @@ async function startAgente(){
   if(agenteStarted) return;
   agenteStarted = true;
   var c = state.candidate;
+  var nombre = c.nombre.split(' ')[0];
 
-  var systemPrompt = "Eres el asistente virtual de Instapack, empresa colaboradora de Amazon Logistics en Getafe (DMZ4). " +
-    "Tu misión es presentar la oferta de trabajo de repartidor/a de paquetería de forma entusiasta, cercana y atractiva. " +
-    "Hablas en español, eres amigable y motivador. Cuando el candidato llegue, salúdale por su nombre y preséntale la oferta destacando los puntos más positivos. " +
-    "Datos clave de la oferta: entrada a las 10:00h, rutas de 9h, siempre cobran 9h aunque terminen antes, " +
-    "zona de reparto: Villaverde Alto y Bajo, Getafe Centro, zona norte de Getafe, Los Molinos, Villa de Vallecas y Perales del Río, " +
-    "cuadrantes cada martes via app WOFFU, 2 días de descanso rotativos, furgoneta y terminal propios de la empresa, " +
-    "formación online de 8h + día en ruta, plan escalonado 11 días (60%, 75%, 90%), " +
-    "conductor experto: incentivo de 5€/día sin paquetería pendiente abonado en nómina. " +
-    "Las rutas siempre hay que terminarlas. La furgoneta no se puede llevar a casa. " +
-    "Para temas de salario remitir a la ETT. Responde preguntas del candidato sobre el puesto de forma positiva y motivadora. " +
-    "Respuestas cortas y directas, máximo 3-4 líneas.";
+  // Read the offer step by step with delays to feel natural
+  var mensajes = [
+    "Hola " + nombre + " 👋 Me llamo InstaBot, soy InstaBot, el asistente virtual de Instapack. Antes de que veas las diapositivas, déjame contarte personalmente en qué consiste el puesto. ¡Solo serán unos segundos!",
+    "📍 Trabajarás como <b>repartidor/a de paquetería en furgoneta</b> para Instapack, empresa colaboradora de Amazon Logistics, en nuestra estación de <b>Getafe (DMZ4)</b>.",
+    "⏰ La jornada empieza a las <b>10:00h</b>. Llegas, cargas tu ruta y sales a repartir por zonas como Villaverde, Getafe Centro, Villa de Vallecas o Perales del Río, entre otras.",
+    "💰 Se abonan <b>9 horas fijas cada día</b> que trabajas — tanto si terminas antes como si tardas un poco más. En cuanto termines la ruta y nosotros autoricemos el retorno, te vas a casa con las 9h cobradas.",
+    "🚐 La empresa te proporciona <b>furgoneta, terminal y línea de teléfono</b>. No necesitas nada tuyo. Eso sí, la furgoneta queda en la nave al terminar, no se lleva a casa.",
+    "📅 Trabajamos de lunes a domingo con <b>2 días de descanso rotativos</b>. Cada martes recibes el cuadrante de la semana siguiente en la app <b>WOFFU</b>.",
+    "⭐ Y lo mejor: cuando seas conductor/a experto/a, <b>cada día que termines sin paquetería pendiente te llevás 5€ extra</b> en nómina a final de mes.",
+    "Eso es todo " + nombre + " 😊 Ahora puedes ver las diapositivas para más detalle. Y si tienes alguna pregunta, aquí estoy. ¿Qué te parece la oferta?"
+  ];
 
-  var primerMensaje = "Hola " + c.nombre.split(' ')[0] + " 👋 Soy el asistente virtual de Instapack. " +
-    "Estoy aquí para contarte todo sobre tu futura posición como repartidor/a en nuestra estación de Getafe (DMZ4). " +
-    "¿Qué te gustaría saber sobre el puesto? Puedes preguntarme lo que quieras 😊";
+  async function mostrarMensajes(i){
+    if(i >= mensajes.length) return;
+    await new Promise(function(r){ setTimeout(r, i === 0 ? 300 : 1800); });
+    // Show typing indicator
+    var chat = document.getElementById('agente-chat');
+    var typing = document.createElement('div');
+    typing.id = 'typing-msg';
+    typing.style.cssText = 'margin-bottom:10px;display:flex;gap:8px;align-items:center;';
+    typing.innerHTML = '<div style="font-size:14px;flex-shrink:0;">🤖</div><div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;font-size:13px;color:rgba(255,255,255,0.5);">escribiendo...</div>';
+    chat.appendChild(typing);
+    chat.scrollTop = chat.scrollHeight;
+    await new Promise(function(r){ setTimeout(r, 900); });
+    var t = document.getElementById('typing-msg');
+    if(t) t.remove();
+    agenteAddMsg('assistant', mensajes[i]);
+    mostrarMensajes(i + 1);
+  }
 
-  agenteHistory = [{role:'user', content: 'Hola, quiero saber sobre el puesto de trabajo en Instapack DMZ4'}];
-  agenteAddMsg('assistant', primerMensaje);
-  agenteHistory.push({role:'assistant', content: primerMensaje});
+  mostrarMensajes(0);
 }
+
 
 async function sendAgente(){
   var input = document.getElementById('agente-input');
@@ -1085,18 +1145,25 @@ async function sendAgente(){
     "Responde de forma positiva, motivadora y concisa. Máximo 3-4 líneas por respuesta.";
 
   try {
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    // Use allorigins proxy to bypass CORS
+    var payload = JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 300,
+      system: systemPrompt,
+      messages: agenteHistory
+    });
+    var proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.anthropic.com/v1/messages');
+    var resp = await fetch(proxyUrl, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 300,
-        system: systemPrompt,
-        messages: agenteHistory
-      })
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': 'sk-ant-api03-placeholder',
+        'anthropic-version': '2023-06-01'
+      },
+      body: payload
     });
     var data = await resp.json();
-    var reply = data.content && data.content[0] ? data.content[0].text : 'Lo siento, no pude procesar tu pregunta. ¡Consulta las diapositivas para más info!';
+    var reply = data.content && data.content[0] ? data.content[0].text : agenteRespuestaLocal(text);
     agenteHistory.push({role:'assistant', content: reply});
     var typingEl = document.getElementById('typing-msg');
     if(typingEl) typingEl.remove();
@@ -1104,7 +1171,7 @@ async function sendAgente(){
   } catch(e) {
     var typingEl = document.getElementById('typing-msg');
     if(typingEl) typingEl.remove();
-    agenteAddMsg('assistant', 'Lo siento, no puedo responder ahora mismo. ¡Consulta las diapositivas para toda la información!');
+    agenteAddMsg('assistant', agenteRespuestaLocal(text));
   }
 
   input.disabled = false;
