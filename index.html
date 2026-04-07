@@ -1145,17 +1145,28 @@ function procesarCola(){
   leerTexto(texto);
 }
 
+function quitarEmojis(str){
+  // Remove all characters outside standard latin + spanish
+  var resultado = '';
+  for(var i = 0; i < str.length; i++){
+    var code = str.codePointAt(i);
+    // Skip surrogate pairs (emojis use 2 chars in JS)
+    if(code > 0xFFFF){ i++; continue; }
+    // Skip symbols, dingbats, arrows, misc symbols (0x2000-0x2FFF range)
+    if(code >= 0x2000 && code <= 0x2FFF){ continue; }
+    // Skip enclosed chars, box drawing etc
+    if(code >= 0x2300 && code <= 0x26FF){ continue; }
+    // Keep basic latin (0-127), latin extended (128-591), spaces, punctuation
+    resultado += str[i];
+  }
+  return resultado;
+}
+
 function encolarVoz(texto){
-  // Remove HTML tags
-  var limpio = texto.replace(/<[^>]*>/g,'');
-  // Aggressive emoji and symbol removal using char code ranges
-  limpio = limpio.split('').filter(function(c){
-    var code = c.codePointAt(0);
-    // Keep only basic latin, latin extended, spanish chars and punctuation
-    return code < 0x2500;
-  }).join('');
-  // Clean up extra spaces and punctuation artifacts
-  limpio = limpio.replace(/\s+/g,' ').trim();
+  var limpio = texto.replace(/<[^>]*>/g,' ');  // Remove HTML
+  limpio = quitarEmojis(limpio);               // Remove all emojis/symbols
+  limpio = limpio.replace(/[*_#]/g,'');         // Remove markdown
+  limpio = limpio.replace(/\s+/g,' ').trim();  // Clean spaces
   if(!limpio) return;
   colaMsgs.push(limpio);
   if(vozActiva && !leyendo) procesarCola();
