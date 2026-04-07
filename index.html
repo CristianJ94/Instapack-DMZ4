@@ -284,9 +284,13 @@
         <div class="slide-title">El trabajo del día a día</div>
         <div class="slide-body">
           <div class="info-row"><div class="info-dot"></div><div>Trabajarás como <b>repartidor/a de paquetería en furgoneta</b> para Instapack dentro de la red Amazon.</div></div>
-          <div class="info-row"><div class="info-dot"></div><div>Cada jornada recoges tu ruta en la nave de Getafe, cargas los paquetes y sales a repartir por tu zona asignada.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div><b>Hora de entrada: 10:00h.</b> Llegarás a la nave de Getafe, cargarás tu ruta y saldrás a repartir por tu zona asignada.</div></div>
           <div class="info-row"><div class="info-dot"></div><div><b>Las rutas siempre hay que terminarlas</b>, independientemente del volumen del día.</div></div>
-          <div class="info-row"><div class="info-dot"></div><div>Al terminar, retornas a la estación, descargas las sacas, dejas la furgoneta en orden y depositas las llaves.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Al terminar la ruta <b>llamas a tráfico</b> para comunicarlo. Una vez autoricemos el retorno, vuelves a la estación, descargas las sacas, dejas la furgoneta en orden y depositas las llaves.</div></div>
+          <div style="background:#F0F4FF;border:1px solid #C5D0F0;border-radius:10px;padding:12px 14px;margin-top:10px;">
+            <div style="font-size:13px;font-weight:700;color:#1A1A2E;margin-bottom:6px;">🚐 Importante sobre la furgoneta</div>
+            <div style="font-size:13px;color:#333;line-height:1.6;">La furgoneta <b>no se puede llevar a casa</b>. Queda aparcada en la nave al finalizar cada jornada.</div>
+          </div>
         </div>
       </div>
 
@@ -309,7 +313,8 @@
         <div class="slide-icon">💰</div>
         <div class="slide-title">Retribución e incentivos</div>
         <div class="slide-body">
-          <div class="info-row"><div class="info-dot"></div><div>Se abonan <b>9 horas diarias</b> cada día que vengas a trabajar, siempre, aunque termines antes.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Las rutas son de <b>9 horas</b>. En cuanto termines la ruta y tráfico autorice el retorno, puedes marcharte a casa — <b>siempre cobrarás las 9 horas completas</b>.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Del mismo modo, si algún día la ruta se alarga un poco más de lo habitual, <b>también cobrarás las 9 horas</b>. La retribución es fija por jornada.</div></div>
           <div style="background:#FFFBEC;border:1px solid #FFE082;border-radius:10px;padding:14px 16px;margin:10px 0;">
             <div style="font-size:13px;font-weight:700;color:#7A4500;margin-bottom:6px;">⭐ Incentivo conductor/a experto/a</div>
             <div style="font-size:13px;color:#7A4500;line-height:1.6;">Cuando seas conductor/a experto/a, <b>cada día que termines sin paquetería pendiente recibirás 5€ de incentivo</b>. Se calcula a final de mes y se abona directamente en nómina.</div>
@@ -452,7 +457,7 @@ var state = {
   currentSlide: 0, totalSlides: 9
 };
 
-function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
+function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-]/g,' ').replace(/\s+/g,' ').trim(); }
 function show(id){ document.getElementById(id).classList.remove('hidden'); }
 function hide(id){ document.getElementById(id).classList.add('hidden'); }
 function setProgress(pct){ document.getElementById('pbar').style.width = pct+'%'; }
@@ -464,6 +469,12 @@ function checkNombre(){
   var btn = document.getElementById('btn-s0');
   if(val.length < 3){ fb.textContent=''; btn.disabled=true; return; }
   var found = CANDIDATES.find(function(c){ return norm(c.nombre)===norm(val); });
+  // If exact match fails, try without accents and extra spaces
+  if(!found){
+    found = CANDIDATES.find(function(c){
+      return norm(c.nombre).replace(/\s/g,'') === norm(val).replace(/\s/g,'');
+    });
+  }
   if(found){
     fb.style.color='#1A6B3C';
     fb.textContent='✓ Nombre encontrado en la lista de convocados';
