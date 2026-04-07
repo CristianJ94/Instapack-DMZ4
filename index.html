@@ -1097,13 +1097,23 @@ var leyendo = false;
 
 function getVoz(){
   var voces = speechSynthesis.getVoices();
-  var esp = voces.filter(function(v){ return v.lang && v.lang.startsWith('es'); });
-  // Prefer female voices
-  var femeninas = ['Paulina','Monica','Luciana','Sabina','Helena','Laura','Google español'];
-  for(var f of femeninas){
-    var v = esp.find(function(x){ return x.name.indexOf(f) > -1; });
-    if(v) return v;
+  // Priority: Spain Spanish voices specifically
+  var espana = [
+    'Google español de España', 'Google español (España)',
+    'Microsoft Helena', 'Microsoft Pablo',
+    'es-ES', 'Monica (Spain)', 'Jorge'
+  ];
+  for(var p of espana){
+    var v = voces.find(function(x){
+      return x.name.indexOf(p) > -1 || x.lang === 'es-ES';
+    });
+    if(v && v.lang === 'es-ES') return v;
   }
+  // Fallback: any es-ES
+  var esES = voces.filter(function(v){ return v.lang === 'es-ES'; });
+  if(esES.length) return esES[0];
+  // Last resort: any Spanish
+  var esp = voces.filter(function(v){ return v.lang && v.lang.startsWith('es'); });
   return esp[0] || voces[0] || null;
 }
 
@@ -1113,7 +1123,7 @@ function leerTexto(texto){
   var v = getVoz();
   if(v) u.voice = v;
   u.lang = 'es-ES';
-  u.rate = 1.05;
+  u.rate = 1.18;
   u.pitch = 1.05;
   u.volume = 1;
   u.onend = function(){
@@ -1138,13 +1148,13 @@ function procesarCola(){
 function encolarVoz(texto){
   // Remove HTML tags
   var limpio = texto.replace(/<[^>]*>/g,'');
-  // Remove emojis and special unicode symbols
-  limpio = limpio.replace(/[\u{1F000}-\u{1FFFF}]/gu, '');
-  limpio = limpio.replace(/[\u{2600}-\u{27FF}]/gu, '');
-  limpio = limpio.replace(/[\u{1F300}-\u{1F9FF}]/gu, '');
-  limpio = limpio.replace(/[\u2702-\u27B0]/g, '');
-  limpio = limpio.replace(/[\uE000-\uF8FF]/g, '');
-  // Clean up extra spaces
+  // Aggressive emoji and symbol removal using char code ranges
+  limpio = limpio.split('').filter(function(c){
+    var code = c.codePointAt(0);
+    // Keep only basic latin, latin extended, spanish chars and punctuation
+    return code < 0x2500;
+  }).join('');
+  // Clean up extra spaces and punctuation artifacts
   limpio = limpio.replace(/\s+/g,' ').trim();
   if(!limpio) return;
   colaMsgs.push(limpio);
