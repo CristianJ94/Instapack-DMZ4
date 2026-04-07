@@ -244,6 +244,27 @@
 
       <div class="divider"></div>
 
+      <!-- AGENTE IA -->
+      <div id="agente-wrap" style="margin-bottom:20px;">
+        <div style="background:linear-gradient(135deg,#1A1A2E 0%,#232F3E 100%);border-radius:12px;padding:16px 18px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <div style="width:36px;height:36px;background:#FF9900;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#FF9900;">Asistente Virtual Instapack</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.5);">Con IA · Online ahora</div>
+            </div>
+          </div>
+          <div id="agente-chat" style="min-height:60px;max-height:220px;overflow-y:auto;margin-bottom:12px;"></div>
+          <div id="agente-input-wrap" style="display:flex;gap:8px;">
+            <input type="text" id="agente-input" placeholder="Escribe tu pregunta sobre el puesto..."
+              style="flex:1;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-size:13px;outline:none;"
+              onkeydown="if(event.key==='Enter')sendAgente()" />
+            <button onclick="sendAgente()"
+              style="background:#FF9900;color:#1A1A2E;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;">Enviar</button>
+          </div>
+        </div>
+      </div>
+
       <!-- SLIDES -->
 
       <!-- Slide 0: Hero Amazon -->
@@ -693,6 +714,7 @@ function buildOffer(){
   for(var i=0;i<state.totalSlides;i++) dots+='<div class="sdot" id="dot'+i+'"></div>';
   document.getElementById('slide-dots').innerHTML = dots;
   renderSlide(0);
+  setTimeout(startAgente, 600);
 }
 
 // ── SLIDES ──
@@ -991,6 +1013,102 @@ async function renderDashboard(){
   document.getElementById('stat-acepta').textContent = na;
   document.getElementById('stat-rechaza').textContent= nr;
   document.getElementById('admin-clist').innerHTML   = html;
+}
+
+// ── AGENTE IA ─────────────────────────────────────────────────────────────
+var agenteHistory = [];
+var agenteStarted = false;
+
+function agenteAddMsg(role, text, typing){
+  var chat = document.getElementById('agente-chat');
+  var div = document.createElement('div');
+  div.style.cssText = 'margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;';
+  var isBot = role === 'assistant';
+  div.innerHTML = (isBot ? '<div style="font-size:14px;flex-shrink:0;">🤖</div>' : '<div style="font-size:14px;flex-shrink:0;">👤</div>') +
+    '<div style="background:' + (isBot ? 'rgba(255,255,255,0.08)' : 'rgba(255,153,0,0.15)') + ';border-radius:8px;padding:8px 12px;font-size:13px;color:#fff;line-height:1.6;flex:1;">' +
+    (typing ? '<span id="typing-indicator">...</span>' : text) + '</div>';
+  div.id = typing ? 'typing-msg' : '';
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+async function startAgente(){
+  if(agenteStarted) return;
+  agenteStarted = true;
+  var c = state.candidate;
+
+  var systemPrompt = "Eres el asistente virtual de Instapack, empresa colaboradora de Amazon Logistics en Getafe (DMZ4). " +
+    "Tu misión es presentar la oferta de trabajo de repartidor/a de paquetería de forma entusiasta, cercana y atractiva. " +
+    "Hablas en español, eres amigable y motivador. Cuando el candidato llegue, salúdale por su nombre y preséntale la oferta destacando los puntos más positivos. " +
+    "Datos clave de la oferta: entrada a las 10:00h, rutas de 9h, siempre cobran 9h aunque terminen antes, " +
+    "zona de reparto: Villaverde Alto y Bajo, Getafe Centro, zona norte de Getafe, Los Molinos, Villa de Vallecas y Perales del Río, " +
+    "cuadrantes cada martes via app WOFFU, 2 días de descanso rotativos, furgoneta y terminal propios de la empresa, " +
+    "formación online de 8h + día en ruta, plan escalonado 11 días (60%, 75%, 90%), " +
+    "conductor experto: incentivo de 5€/día sin paquetería pendiente abonado en nómina. " +
+    "Las rutas siempre hay que terminarlas. La furgoneta no se puede llevar a casa. " +
+    "Para temas de salario remitir a la ETT. Responde preguntas del candidato sobre el puesto de forma positiva y motivadora. " +
+    "Respuestas cortas y directas, máximo 3-4 líneas.";
+
+  var primerMensaje = "Hola " + c.nombre.split(' ')[0] + " 👋 Soy el asistente virtual de Instapack. " +
+    "Estoy aquí para contarte todo sobre tu futura posición como repartidor/a en nuestra estación de Getafe (DMZ4). " +
+    "¿Qué te gustaría saber sobre el puesto? Puedes preguntarme lo que quieras 😊";
+
+  agenteHistory = [{role:'user', content: 'Hola, quiero saber sobre el puesto de trabajo en Instapack DMZ4'}];
+  agenteAddMsg('assistant', primerMensaje);
+  agenteHistory.push({role:'assistant', content: primerMensaje});
+}
+
+async function sendAgente(){
+  var input = document.getElementById('agente-input');
+  var text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  input.disabled = true;
+
+  agenteAddMsg('user', text);
+  agenteHistory.push({role:'user', content: text});
+
+  agenteAddMsg('assistant', '', true);
+
+  var c = state.candidate;
+  var systemPrompt = "Eres el asistente virtual de Instapack, empresa colaboradora de Amazon Logistics en Getafe (DMZ4). " +
+    "Tu misión es presentar la oferta de trabajo de repartidor/a de paquetería de forma entusiasta, cercana y atractiva. " +
+    "Hablas en español, eres amigable y motivador. El candidato se llama " + c.nombre + " y su ETT es " + c.ett + ". " +
+    "Datos clave de la oferta: entrada a las 10:00h, rutas de 9h, siempre cobran 9h aunque terminen antes o tarden más, " +
+    "zona de reparto: Villaverde Alto y Bajo, Getafe Centro, zona norte de Getafe, Los Molinos, Villa de Vallecas y Perales del Río, " +
+    "cuadrantes cada martes via app WOFFU, 2 días de descanso rotativos a la semana, furgoneta y terminal propios de la empresa, " +
+    "formación online de 8h (9:00-16:30) + día en ruta con compañero, plan escalonado 11 días (días 1-3: 60%, días 4-7: 75%, días 7-11: 90%), " +
+    "conductor experto desde día 12: 100% autónomo + incentivo de 5€/día sin paquetería pendiente abonado en nómina a final de mes. " +
+    "Las rutas siempre hay que terminarlas. La furgoneta no se puede llevar a casa. " +
+    "Para temas de salario remitir a su ETT (" + c.ett + "). " +
+    "Responde de forma positiva, motivadora y concisa. Máximo 3-4 líneas por respuesta.";
+
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 300,
+        system: systemPrompt,
+        messages: agenteHistory
+      })
+    });
+    var data = await resp.json();
+    var reply = data.content && data.content[0] ? data.content[0].text : 'Lo siento, no pude procesar tu pregunta. ¡Consulta las diapositivas para más info!';
+    agenteHistory.push({role:'assistant', content: reply});
+    var typingEl = document.getElementById('typing-msg');
+    if(typingEl) typingEl.remove();
+    agenteAddMsg('assistant', reply);
+  } catch(e) {
+    var typingEl = document.getElementById('typing-msg');
+    if(typingEl) typingEl.remove();
+    agenteAddMsg('assistant', 'Lo siento, no puedo responder ahora mismo. ¡Consulta las diapositivas para toda la información!');
+  }
+
+  input.disabled = false;
+  input.focus();
 }
 </script>
 </body>
