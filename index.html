@@ -585,33 +585,33 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <script>
 var CANDIDATES = [
-  {"ett":"JOB AND TALENT","nombre":"Jesus Rivera Aguilera","dni":"49704937M"},
-  {"ett":"JOB AND TALENT","nombre":"Daniel Mendez","dni":"03177130W"},
-  {"ett":"JOB AND TALENT","nombre":"Raul Gil Garcia","dni":"55067948Z"},
-  {"ett":"JOB AND TALENT","nombre":"Ayoub Taieboune","dni":"Y8871174L"},
-  {"ett":"JOB AND TALENT","nombre":"Iker Alcocer Cruz","dni":"09248526L"},
-  {"ett":"JOB AND TALENT","nombre":"Raquel Daganzo Gallego","dni":"53011441Y"},
-  {"ett":"JOB AND TALENT","nombre":"Alberto Toribio Santos","dni":"09032516W"},
-  {"ett":"JOB AND TALENT","nombre":"Fikri El Mossaoui","dni":"X6694064Y"},
-  {"ett":"JOB AND TALENT","nombre":"Marcos Lamela Saez","dni":"49157175B"},
-  {"ett":"GI GROUP","nombre":"Juan Jose Alamo Pacheco","dni":"06008270A"},
-  {"ett":"GI GROUP","nombre":"Amparo Garrido Fernandez","dni":"11868875R"},
-  {"ett":"GI GROUP","nombre":"Alex Ballestero Baro","dni":"49585240T"},
-  {"ett":"GI GROUP","nombre":"Ricardo Iglesias Fernandez","dni":"51013328H"},
-  {"ett":"GI GROUP","nombre":"Jidahia Campo Mendoza","dni":"Y9135224Y"},
-  {"ett":"GI GROUP","nombre":"Mostafa Sbihi","dni":"Z1493873M"},
-  {"ett":"GI GROUP","nombre":"Gabriel Acebedo Ventosa","dni":"50366970Y"},
-  {"ett":"GI GROUP","nombre":"Guzman Montero Blas","dni":"49365772K"},
-  {"ett":"GI GROUP","nombre":"Fernando Lopez Lopez","dni":"70360110M"},
-  {"ett":"ADECCO","nombre":"Mohamed Talibe Diallo Diaoune","dni":"60554933G"},
-  {"ett":"ADECCO","nombre":"Daniel Navarrete Vargas","dni":"33527651E"},
-  {"ett":"ADECCO","nombre":"Sergio Diaz Bonilla","dni":"70425726W"},
-  {"ett":"TUETT","nombre":"Sleyder David Simbaña Loachamin","dni":"60519532T"},
-  {"ett":"TUETT","nombre":"Jose Uceda Forero","dni":"52977810R"},
-  {"ett":"TUETT","nombre":"Ricardo Cusio Torrado","dni":"46922518B"},
-  {"ett":"TUETT","nombre":"Ramon Losada Fernandez","dni":"72297020Q"},
-  {"ett":"TUETT","nombre":"Miguel Angel Velasquez Leiva","dni":"Y9797891C"},
-  {"ett":"TUETT","nombre":"Angel Caparroz Sanchez","dni":"53808038K"}
+  {"ett":"JOB AND TALENT","nombre":"Jesus Rivera Aguilera","dni":"49704937M","tel":"624287903"},
+  {"ett":"JOB AND TALENT","nombre":"Daniel Mendez","dni":"03177130W","tel":"602302372"},
+  {"ett":"JOB AND TALENT","nombre":"Raul Gil Garcia","dni":"55067948Z","tel":"600363564"},
+  {"ett":"JOB AND TALENT","nombre":"Ayoub Taieboune","dni":"Y8871174L","tel":"647103239"},
+  {"ett":"JOB AND TALENT","nombre":"Iker Alcocer Cruz","dni":"09248526L","tel":"680846440"},
+  {"ett":"JOB AND TALENT","nombre":"Raquel Daganzo Gallego","dni":"53011441Y","tel":"691203512"},
+  {"ett":"JOB AND TALENT","nombre":"Alberto Toribio Santos","dni":"09032516W","tel":"641896220"},
+  {"ett":"JOB AND TALENT","nombre":"Fikri El Mossaoui","dni":"X6694064Y","tel":"667319072"},
+  {"ett":"JOB AND TALENT","nombre":"Marcos Lamela Saez","dni":"49157175B","tel":"622120289"},
+  {"ett":"GI GROUP","nombre":"Juan Jose Alamo Pacheco","dni":"06008270A","tel":"635814759"},
+  {"ett":"GI GROUP","nombre":"Amparo Garrido Fernandez","dni":"11868875R","tel":"653993934"},
+  {"ett":"GI GROUP","nombre":"Alex Ballestero Baro","dni":"49585240T","tel":"627697740"},
+  {"ett":"GI GROUP","nombre":"Ricardo Iglesias Fernandez","dni":"51013328H","tel":"641869193"},
+  {"ett":"GI GROUP","nombre":"Jidahia Campo Mendoza","dni":"Y9135224Y","tel":"653482875"},
+  {"ett":"GI GROUP","nombre":"Mostafa Sbihi","dni":"Z1493873M","tel":"663531311"},
+  {"ett":"GI GROUP","nombre":"Gabriel Acebedo Ventosa","dni":"50366970Y","tel":"624248485"},
+  {"ett":"GI GROUP","nombre":"Guzman Montero Blas","dni":"49365772K","tel":"692723710"},
+  {"ett":"GI GROUP","nombre":"Fernando Lopez Lopez","dni":"70360110M","tel":"658129824"},
+  {"ett":"ADECCO","nombre":"Mohamed Talibe Diallo Diaoune","dni":"60554933G","tel":"643385974"},
+  {"ett":"ADECCO","nombre":"Daniel Navarrete Vargas","dni":"33527651E","tel":"602083729"},
+  {"ett":"ADECCO","nombre":"Sergio Diaz Bonilla","dni":"70425726W","tel":"676024144"},
+  {"ett":"TUETT","nombre":"Sleyder David Simbaña Loachamin","dni":"60519532T","tel":"661485317"},
+  {"ett":"TUETT","nombre":"Jose Uceda Forero","dni":"52977810R","tel":"676607561"},
+  {"ett":"TUETT","nombre":"Ricardo Cusio Torrado","dni":"46922518B","tel":"654193328"},
+  {"ett":"TUETT","nombre":"Ramon Losada Fernandez","dni":"72297020Q","tel":"627141797"},
+  {"ett":"TUETT","nombre":"Miguel Angel Velasquez Leiva","dni":"Y9797891C","tel":"641177855"},
+  {"ett":"TUETT","nombre":"Angel Caparroz Sanchez","dni":"53808038K","tel":"666860987"}
 ];
 
 var state = {
@@ -955,11 +955,17 @@ function responder(choice){
     localStorage.setItem(lsKey, JSON.stringify({choice:choice, fecha:f2}));
   }catch(e){}
 
+  // Find phone from CANDIDATES list
+  var telefono = '';
+  var cand = CANDIDATES.find(function(x){ return x.nombre === c.nombre; });
+  if(cand && cand.tel) telefono = cand.tel;
+
   enviarFormspree({
     nombre: c.nombre,
     ett: c.ett,
     respuesta: choice === 'acepta' ? 'ACEPTA LA OFERTA' : 'RECHAZA LA OFERTA',
     fecha: f2,
+    telefono: telefono,
     amazon_exp: state.amazonExp === 'si' ? 'Si — '+(state.empresa||'')+' / '+(state.estacion||'') : 'No',
     dias_fuera: state.diasFuera !== null ? state.diasFuera+' dias' : 'N/A',
     formacion: state.noFormacion ? 'No necesaria' : 'Requerida'
