@@ -82,6 +82,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   .summary-row .lbl { color: var(--gray-text); }
   .summary-row .val { font-weight: 600; color: #222; text-align: right; max-width: 60%; }
   .divider { height: 1px; background: var(--gray-border); margin: 18px 0; }
+  .faq-btn {
+    background: rgba(255,153,0,0.15);
+    color: #FF9900;
+    border: 1px solid rgba(255,153,0,0.35);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .faq-btn:hover { background: rgba(255,153,0,0.3); }
   .hidden { display: none; }
   .req-list { display: flex; flex-direction: column; gap: 6px; margin: 14px 0; }
   .req-item { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 9px 12px; border-radius: var(--radius-sm); background: var(--gray-bg); border: 1px solid var(--gray-border); }
@@ -447,6 +459,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <div style="font-size:26px;margin-bottom:8px;">🚀</div>
             <div style="font-size:15px;font-weight:700;color:#FF9900;margin-bottom:6px;">¿Aceptas la oferta?</div>
             <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:16px;">Tu respuesta quedará registrada y nos ayuda a planificar tu incorporación.</div>
+            <!-- FAQ rápido antes de decidir -->
+            <div id="faq-wrap" style="margin-bottom:16px;">
+              <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:8px;text-align:center;">¿Tienes alguna duda antes de decidir? Pulsa una pregunta:</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px;">
+                <button onclick="faqPregunta('salario')" class="faq-btn">💰 Salario</button>
+                <button onclick="faqPregunta('diaslibres')" class="faq-btn">📅 Días libres</button>
+                <button onclick="faqPregunta('zonas')" class="faq-btn">🗺️ Zonas de reparto</button>
+                <button onclick="faqPregunta('horarios')" class="faq-btn">⏰ Horarios</button>
+                <button onclick="faqPregunta('cuandoformacion')" class="faq-btn">📆 ¿Cuándo es la formación?</button>
+                <button onclick="faqPregunta('tipformacion')" class="faq-btn">💻 ¿Formación online o presencial?</button>
+                <button onclick="faqPregunta('furgoneta')" class="faq-btn">🚐 ¿La furgoneta se puede llevar a casa?</button>
+              </div>
+              <div id="faq-respuesta" style="display:none;background:rgba(255,255,255,0.08);border-radius:8px;padding:12px 14px;font-size:13px;color:#fff;line-height:1.65;margin-bottom:10px;"></div>
+            </div>
+
             <div style="display:flex;gap:10px;justify-content:center;">
               <button onclick="responder('acepta')" id="btn-acepta" style="background:#27AE60;color:white;border:none;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;flex:1;max-width:160px;">✓ Acepto</button>
               <button onclick="responder('rechaza')" id="btn-rechaza" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;flex:1;max-width:160px;">✗ No me interesa</button>
@@ -765,6 +792,11 @@ function renderSlide(n){
   if(n===state.totalSlides-1){
     nb.textContent='¡Listo!';
     nb.onclick=function(){ nb.disabled=true; nb.textContent='Completado ✓'; setProgress(100); };
+    // InstaBot asks if everything is clear
+    setTimeout(function(){
+      var nombre = state.candidate ? state.candidate.nombre.split(' ')[0] : '';
+      encolarVoz('Hola ' + nombre + ', ya hemos terminado el recorrido. Espero que todo haya quedado claro. Si tienes alguna duda sobre salario, horarios, zonas, formacion o dias libres, pulsa la pregunta que necesites y te respondo al momento.');
+    }, 800);
   } else {
     nb.textContent='Siguiente →';
     nb.onclick=function(){ changeSlide(1); };
@@ -1325,5 +1357,28 @@ function playSuccessSound(){
       osc.stop(start + 0.5);
     });
   } catch(e){}
+}
+
+function faqPregunta(tipo){
+  // Stop any current speech immediately
+  speechSynthesis.cancel();
+  colaMsgs = [];
+  leyendo = false;
+
+  var respuestas = {
+    salario: 'El salario se compone de <b>9 horas diarias fijas</b> cada dia que trabajes, tanto si terminas antes como si tardas un poco mas. Ademas, una vez seas conductor/a experto/a, recibiras <b>5 euros de incentivo por cada dia que termines sin paqueteria pendiente</b>, abonados en nomina a final de mes. Para el detalle exacto del salario hora consulta con tu ETT.',
+    diaslibres: 'Los dias de descanso los asigna el <b>jefe de trafico encargado</b> cada semana segun las necesidades del servicio. No tienen por que ser dias correlativos — pueden ser separados o juntos dependiendo del cuadrante semanal. Se publican cada martes en la app WOFFU.',
+    zonas: 'Las zonas de reparto que cubrimos son: <b>Villaverde</b> (28021 - 28041), <b>Getafe</b> (28901 - 28902 - 28903 - 28904) y <b>Villa de Vallecas</b> (28031 - 28051).',
+    horarios: 'La hora de entrada es a las <b>10:00h</b>. Las rutas duran aproximadamente hasta las <b>19:00h</b>, completando asi las 9 horas diarias. Si terminas tu ruta antes de tiempo, con nuestra autorizacion podras marcharte a casa igualmente cobrando las 9 horas completas.',
+    cuandoformacion: 'La fecha de inicio de la formacion te la comunicaremos <b>por WhatsApp al numero que facilitaste a tu ETT</b>. Primero tenemos que crear tu cuenta en el sistema, y en cuanto este lista te avisamos con las fechas.',
+    tipformacion: 'La formacion es <b>totalmente online</b> con una duracion de 8 horas (9:00h a 16:30h). A no ser que por normativa de Amazon deba ser presencial, siempre se realiza de forma online.',
+    furgoneta: 'Las furgonetas <b>no se pueden llevar a casa bajo ninguna circunstancia</b>. Al finalizar cada jornada, la furgoneta queda aparcada en base (la nave de Getafe). Las furgonetas siempre duermen en base.'
+  };
+  var r = respuestas[tipo];
+  if(!r) return;
+  var div = document.getElementById('faq-respuesta');
+  div.innerHTML = '<b style="color:#FF9900;font-size:12px;">InstaBot responde:</b><br><br>' + r;
+  div.style.display = 'block';
+  encolarVoz(r);
 }
 </script>
