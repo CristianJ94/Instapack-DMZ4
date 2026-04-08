@@ -491,8 +491,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <div style="font-size:13px;color:#922B21;line-height:1.65;">El teléfono y los datos son para <b>uso exclusivo laboral</b>. Queda terminantemente prohibido cualquier uso personal del dispositivo o de los datos contratados.</div>
           </div>
 
-          <div style="background:#F4FAFD;border:1px solid #AED6F1;border-radius:10px;padding:12px 15px;">
+          <div style="background:#F4FAFD;border:1px solid #AED6F1;border-radius:10px;padding:12px 15px;margin-bottom:10px;">
             <div style="font-size:13px;color:#1A5276;line-height:1.6;">💡 <b>Pequeño detalle:</b> No proporcionamos batería externa ni cargador de coche — eso corre a cuenta de cada uno. ¡Una pequeña inversión para no quedarte sin batería en ruta!</div>
+          </div>
+          <div style="background:#FFF8EC;border:1px solid #FDEBD0;border-radius:10px;padding:12px 15px;">
+            <div style="font-size:13px;color:#7A4500;line-height:1.6;">🤝 <b>Cuídalo como tuyo:</b> Si el terminal sufre alguna rotura de pantalla u otro daño por mal uso, la reparación correrá a cargo del conductor. ¡Trátalo bien y no tendrás ningún problema!</div>
           </div>
         </div>
       </div>
@@ -894,15 +897,15 @@ function renderSlide(n){
   if(typeof instabotDice === 'function' && agenteStarted){
     var nombre = state.candidate ? state.candidate.nombre.split(' ')[0] : '';
     var msgs = [
-      'Este es tu futuro puesto de trabajo. Repartidor o repartidora de paqueteria en furgoneta para Instapack, empresa colaboradora de Amazon Logistics en Getafe.',
-      'Trabajaras en la estacion DMZ4 de Getafe. Las zonas de reparto son Villaverde, Getafe, Villa de Vallecas y Perales del Rio.',
-      'Cada dia entras a las 10 de la mañana y la jornada es hasta las 19:00h, 9 horas abonadas. Si terminas la ruta antes de las 19, nos llamas a trafico y con nuestra autorizacion puedes volver a base y marcharte a casa cobrando las 9 horas igualmente. Si la ruta se alarga mas de las 19, hay que terminarla siempre y tambien cobras las 9 horas. Al retornar dejas la furgoneta en orden y las llaves en base.',
-      'Los cuadrantes los hace el jefe de trafico y se publican cada martes en WOFFU. Tendras acceso a WOFFU desde el primer dia, tus credenciales te los da tu ETT y si no los recibes nos escribes y te los damos. Una vez publicado el cuadrante no se cambia salvo cita medica. Puedes pedir el dia que necesites con antelacion. Los festivos se trabajan con plus. Solo cerramos el 25 de diciembre y el 1 de enero. Es obligatorio fichar entrada y salida cada dia.',
-      'Cada dia que trabajas generas 9 horas que se abonan en nomina. El precio de la hora te lo indica tu ETT, ellos gestionan tu salario. Ademas, cuando seas conductor experto, cada dia que termines sin paqueteria te llevamos 5 euros extra en nomina. Y lo mejor, si demuestras compromiso y buen desempeño tienes posibilidad real de pasar a plantilla fija de Instapack.',
-      'La empresa te proporciona furgoneta, terminal con cargador y linea con datos incluidos. El terminal te lo llevas a casa pero eres responsable de el desde el primer momento. El telefono y los datos son para uso exclusivo laboral, no para uso personal. La bateria externa y el cargador de coche corren a tu cuenta, pero merece la pena para no quedarte sin bateria en ruta.',
-      '',  // slide6 formacion - handled dynamically
-      'Una vez superada la formacion, los primeros 11 dias trabajaras de forma progresiva. Del 1 al 3 con el 60%, del 4 al 7 con el 75%, del 7 al 11 con el 90%. A partir del dia 12 ya eres conductor experto.',
-      'Ya hemos terminado ' + nombre + '. Si tienes alguna duda antes de decidir, pulsa cualquiera de los botones de abajo y te respondo al momento.'
+      'Bienvenido a Instapack, empresa colaboradora de Amazon Logistics. Te ofrecemos un puesto de repartidor o repartidora de paqueteria en furgoneta en nuestra estacion de Getafe, conocida como DMZ4. Cobraras 9 horas diarias, tendras furgoneta incluida y podras conseguir hasta 5 euros de incentivo al dia.',
+      'Trabajaras en la estacion DMZ4 de Getafe. Las zonas de reparto son la zona de Villaverde, la zona de Getafe, la zona de Villa de Vallecas y la zona de Perales del Rio.',
+      'Trabajaras como repartidor o repartidora de paqueteria en furgoneta. La jornada comienza a las 10 de la manana y finaliza a las 19 horas, completando las 9 horas abonadas. Si terminas antes de las 19, nos llamas a trafico y con nuestra autorizacion puedes retornar y marcharte a casa cobrando las 9 horas. Si la ruta se alarga mas de las 19, hay que terminarla siempre y tambien cobras las 9 horas. La furgoneta no se puede llevar a casa, siempre queda aparcada en la nave.',
+      'Se trabaja de lunes a domingo con 2 dias de descanso rotativos. Los cuadrantes los elabora el jefe de trafico y se publican cada martes en WOFFU. Una vez publicado no se modifica salvo causa medica. Puedes solicitar el dia libre con antelacion y se cuadrara con el otro descanso. Los festivos se trabajan con plus economico. Solo cerramos el 25 de diciembre y el 1 de enero. Es obligatorio fichar la entrada y la salida cada dia. Tendras acceso a WOFFU desde el primer dia y las credenciales te las da tu ETT.',
+      'Cada dia que trabajas generas 9 horas que se abonan en nomina. El precio de la hora lo gestiona tu ETT, consultalos directamente. Cuando seas conductor experto, cada dia que termines sin paqueteria recibiras 5 euros de incentivo en nomina. La continuidad dependera de tu desempeño diario, con posibilidad real de incorporarte a la plantilla fija de Instapack.',
+      'La empresa te proporciona furgoneta, terminal con cargador y linea de telefono con datos incluidos. El terminal te lo llevas a casa pero eres responsable desde el primer momento. El telefono y los datos son para uso exclusivo laboral. Si el terminal sufre alguna rotura por mal uso, la reparacion corre a cargo del conductor. La bateria externa y el cargador de coche corren a cuenta de cada uno.',
+      '',
+      'Tras la formacion, los primeros 11 dias trabajaras de forma progresiva. Los dias 1 al 3 con el 60 por ciento de carga. Los dias 4 al 7 con el 75 por ciento. Los dias 7 al 11 con el 90 por ciento. A partir del dia 12 eres conductor experto, trabajas al 100 por ciento y tienes derecho al incentivo de 5 euros diarios.',
+      'Ya hemos terminado ' + nombre + '. Espero que todo haya quedado claro. Si tienes alguna duda sobre salario, horarios, zonas, formacion o dias libres, pulsa cualquiera de los botones de abajo y te respondo al momento.'
     ];
     var msg = msgs[n];
     if(n === 6){
@@ -1474,7 +1477,7 @@ function faqPregunta(tipo){
   var respuestas = {
     salario: 'Cada dia de trabajo generas <b>9 horas que se abonan en nomina</b>. El <b>precio por hora lo gestiona tu ETT</b> (<span id="faq-ett"></span>), consultalos directamente para conocer tu salario exacto. Ademas, una vez seas conductor experto, <b>cada dia que termines sin paqueteria recibiras 5 euros de incentivo</b> en nomina a final de mes.',
     diaslibres: 'Los dias de descanso los asigna el <b>jefe de trafico</b> cada semana. Puedes solicitar el dia que necesites con antelacion y se cuadrara con el otro descanso. No tienen por que ser correlativos segun el volumen de la semana. Una vez publicado el cuadrante no se modifica salvo cita medica. Los <b>festivos se trabajan</b> cobrando un plus economico. Solo cerramos el <b>25 de diciembre</b> y el <b>1 de enero</b>.',
-    zonas: 'Las zonas de reparto son: <b>Villaverde</b> (28021 - 28041), <b>Getafe</b> (28901 - 28902 - 28903 - 28904), <b>Villa de Vallecas</b> (28031 - 28051) y <b>Perales del Rio</b> (28909).',
+    zonas: 'Las zonas de reparto son: <b>Zona de Villaverde</b>, <b>Zona de Getafe</b>, <b>Zona de Villa de Vallecas</b> y <b>Zona de Perales del Rio</b>.',
     horarios: 'La jornada es de <b>10:00h a 19:00h</b>, 9 horas abonadas. Si terminas la ruta antes de las 19:00h, llamas a trafico y con nuestra autorizacion retornas a base y te marchas a casa cobrando las 9 horas completas. Si la ruta se alarga mas alla de las 19:00h, hay que terminarla siempre y <b>tambien cobras las 9 horas</b>.',
     cuandoformacion: 'La fecha de inicio de la formacion te la comunicaremos <b>por WhatsApp al numero que facilitaste a tu ETT</b>. Primero tenemos que crear tu cuenta en el sistema, y en cuanto este lista te avisamos con las fechas.',
     tipformacion: 'La formacion es <b>totalmente online</b>, de 9:00h a 16:30h (8 horas) y es <b>remunerada</b>. Una vez finalices y nos pases el diploma, te indicamos donde presentarte para la <b>formacion en carretera de 9 horas</b>. A no ser que por normativa de Amazon deba ser presencial, siempre online.',
