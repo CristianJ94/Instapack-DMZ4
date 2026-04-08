@@ -659,6 +659,19 @@ function checkNombre(){
 
 function goDni(){
   if(!state.candidate) return;
+  // Check if already completed BEFORE showing DNI screen
+  var lsKey = 'done_' + state.candidate.nombre.toLowerCase().replace(/\s+/g,'_');
+  var done = null;
+  try{ done = JSON.parse(localStorage.getItem(lsKey)); }catch(e){}
+  if(done){
+    hide('s0');
+    show('s2');
+    document.getElementById('nombre-display').textContent = state.candidate.nombre.split(' ')[0];
+    ['q1','q2','q3','q4'].forEach(function(id){ hide(id); });
+    show('already-done');
+    setProgress(100);
+    return;
+  }
   hide('s0'); show('s0b');
   setProgress(8);
 }
@@ -669,6 +682,16 @@ function checkDni(){
   var btn = document.getElementById('btn-s0b');
   if(val.length < 8){ fb.textContent=''; btn.disabled=true; return; }
   if(val.toUpperCase() === state.candidate.dni.toUpperCase()){
+    // Also check if already completed at this point
+    var lsKey2 = 'done_' + state.candidate.nombre.toLowerCase().replace(/\s+/g,'_');
+    var done2 = null;
+    try{ done2 = JSON.parse(localStorage.getItem(lsKey2)); }catch(e){}
+    if(done2){
+      fb.style.color='#922B21';
+      fb.textContent='Ya has completado este proceso anteriormente.';
+      btn.disabled=true;
+      return;
+    }
     fb.style.color='#1A6B3C';
     fb.textContent='✓ Identidad verificada correctamente';
     btn.disabled=false;
@@ -905,7 +928,7 @@ function renderSlide(n){
       'Trabajaras en la estacion DMZ4 de Getafe. Las zonas de reparto son la zona de Villaverde, la zona de Getafe, la zona de Villa de Vallecas y la zona de Perales del Rio.',
       'Trabajaras como repartidor o repartidora de paqueteria en furgoneta. La jornada comienza a las 10 de la manana y finaliza a las 19 horas, completando las 9 horas abonadas. Si terminas antes de las 19, nos llamas a trafico y con nuestra autorizacion puedes retornar y marcharte a casa cobrando las 9 horas. Si la ruta se alarga mas de las 19, hay que terminarla siempre y tambien cobras las 9 horas. La furgoneta no se puede llevar a casa, siempre queda aparcada en la nave.',
       'Se trabaja de lunes a domingo con 2 dias de descanso rotativos. Los cuadrantes los elabora el jefe de trafico y se publican cada martes en WOFFU. Una vez publicado no se modifica salvo causa medica. Puedes solicitar el dia libre con antelacion y se cuadrara con el otro descanso. Los festivos se trabajan con plus economico. Solo cerramos el 25 de diciembre y el 1 de enero. Es obligatorio fichar la entrada y la salida cada dia. Tendras acceso a WOFFU desde el primer dia y las credenciales te las da tu ETT.',
-      'Cada dia que trabajas generas 9 horas que se abonan en nomina. El precio de la hora lo gestiona tu ETT, consultalos directamente. Cuando seas conductor experto, cada dia que termines sin paqueteria recibiras 5 euros de incentivo en nomina. La continuidad dependera de tu desempeño diario, con posibilidad real de incorporarte a la plantilla fija de Instapack.',
+      'El contrato es a jornada completa de 38 horas semanales. La duracion del contrato te la comunicara tu ETT, ellos gestionan todas las condiciones laborales. Cada dia que trabajas generas 9 horas que se abonan en nomina. Cuando seas conductor experto, cada dia que termines sin paqueteria recibiras 5 euros de incentivo en nomina. Si demuestras compromiso y buen desempeño tienes posibilidad real de pasar a plantilla fija de Instapack.',
       'La empresa te proporciona furgoneta, terminal con cargador y linea de telefono con datos incluidos. El terminal te lo llevas a casa pero eres responsable desde el primer momento. El telefono y los datos son para uso exclusivo laboral. Si el terminal sufre alguna rotura por mal uso, la reparacion corre a cargo del conductor. La bateria externa y el cargador de coche corren a cuenta de cada uno.',
       '',
       'Tras la formacion, los primeros 11 dias trabajaras de forma progresiva. Los dias 1 al 3 con el 60 por ciento de carga. Los dias 4 al 7 con el 75 por ciento. Los dias 7 al 11 con el 90 por ciento. A partir del dia 12 eres conductor experto, trabajas al 100 por ciento y tienes derecho al incentivo de 5 euros diarios.',
