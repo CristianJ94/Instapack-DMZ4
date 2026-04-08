@@ -445,6 +445,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <div class="slide-body">
           <div class="info-row"><div class="info-dot"></div><div>Cada día que trabajas se generan <b>9 horas</b>. <b>Todas las horas generadas en el mes se abonan en nómina</b>, tanto si terminas antes como si la ruta se alarga.</div></div>
           <div class="info-row"><div class="info-dot"></div><div>El <b>precio de la hora</b> lo gestiona tu ETT (<b id="ett-nombre">tu ETT</b>). Ellos son los responsables de tu salario — consúltales directamente para cualquier duda económica.</div></div>
+          <div style="background:#E8F6FD;border:1px solid #AED6F1;border-radius:10px;padding:12px 14px;margin:10px 0;">
+            <div style="font-size:13px;font-weight:700;color:#1A7BAF;margin-bottom:6px;">📄 Condiciones del contrato</div>
+            <div style="font-size:13px;color:#1A5276;line-height:1.65;">
+              <b>Jornada completa: 38 horas semanales</b><br>
+              <b>Duración del contrato:</b> Tu ETT te informará de la duración y condiciones exactas de tu contrato.
+            </div>
+          </div>
           <div style="background:#FFFBEC;border:1px solid #FFE082;border-radius:10px;padding:14px 16px;margin:10px 0;">
             <div style="font-size:13px;font-weight:700;color:#7A4500;margin-bottom:6px;">⭐ Incentivo conductor/a experto/a</div>
             <div style="font-size:13px;color:#7A4500;line-height:1.6;">Una vez seas conductor/a experto/a, <b>cada día que termines sin paquetería pendiente recibirás 5€ de incentivo</b>. Se hace un cómputo total a final de mes y se abona directamente en nómina.</div>
@@ -615,7 +622,8 @@ var state = {
   q1ok: null, q2ok: null, q3ok: null,
   amazonExp: null, empresa: '', estacion: '',
   lastDay: null, diasFuera: null, noFormacion: false,
-  currentSlide: 0, totalSlides: 9
+  currentSlide: 0, totalSlides: 9,
+  duracionContrato: 'consulta con tu ETT'
 };
 
 function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-]/g,' ').replace(/\s+/g,' ').trim(); }
@@ -812,6 +820,9 @@ function goResults(){
 // ── OFFER ──
 function buildOffer(){
   var c = state.candidate;
+  // Set contract duration if available
+  var durEl = document.getElementById('duracion-contrato');
+  if(durEl && state.duracionContrato) durEl.textContent = state.duracionContrato;
   document.getElementById('nombre-display2').textContent = c.nombre.split(' ')[0];
   document.getElementById('ett-nombre').textContent  = c.ett;
   document.getElementById('ett-nombre2').textContent = c.ett;
