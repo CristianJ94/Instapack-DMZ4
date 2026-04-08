@@ -8,62 +8,63 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --orange: #FF9900; --dark: #1A1A2E; --white: #ffffff;
-    --gray-bg: #F7F7F7; --gray-border: #E0E0E0; --gray-text: #666;
+    --insta-blue: #29ABE2; --insta-dark: #1A7BAF; --insta-light: #E8F6FD;
+    --gray-bg: #F4FAFD; --gray-border: #C8E8F5; --gray-text: #555;
     --green: #27AE60; --green-bg: #EAF7EF; --red: #E74C3C; --red-bg: #FDEDEC;
-    --blue-bg: #EBF5FB; --blue: #2980B9; --radius: 12px; --radius-sm: 8px;
+    --blue-bg: #E8F6FD; --blue: #29ABE2; --radius: 12px; --radius-sm: 8px;
   }
   @keyframes pulso {
-  0%   { box-shadow: 0 0 0 0 rgba(255,153,0,0.5); }
-  70%  { box-shadow: 0 0 0 8px rgba(255,153,0,0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,153,0,0); }
+  0%   { box-shadow: 0 0 0 0 rgba(41,171,226,0.5); }
+  70%  { box-shadow: 0 0 0 8px rgba(41,171,226,0); }
+  100% { box-shadow: 0 0 0 0 rgba(41,171,226,0); }
 }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-bg); min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px 48px; }
   .container { width: 100%; max-width: 560px; }
-  .header { background: var(--dark); border-radius: var(--radius) var(--radius) 0 0; padding: 20px 24px; display: flex; align-items: center; gap: 14px; }
-  .logo { width: 44px; height: 44px; background: var(--orange); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: var(--dark); flex-shrink: 0; letter-spacing: 0.5px; text-align: center; line-height: 1.3; }
+  .header { background: linear-gradient(135deg, #1A7BAF 0%, #29ABE2 100%); border-radius: var(--radius) var(--radius) 0 0; padding: 20px 24px; display: flex; align-items: center; gap: 14px; }
+  .logo { width: 44px; height: 44px; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 10px; color: #29ABE2; flex-shrink: 0; letter-spacing: 0.5px; text-align: center; line-height: 1.3; border: 2px solid rgba(255,255,255,0.6); }
   .header-text h1 { font-size: 16px; font-weight: 600; color: var(--white); }
-  .header-text p  { font-size: 12px; color: var(--orange); margin-top: 2px; }
-  .progress-wrap { background: var(--dark); padding: 0 24px 16px; }
+  .header-text p  { font-size: 12px; color: rgba(255,255,255,0.85); margin-top: 2px; }
+  .progress-wrap { background: linear-gradient(135deg, #1A7BAF 0%, #29ABE2 100%); padding: 0 24px 16px; }
   .progress-track { height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; }
-  .progress-fill  { height: 100%; background: var(--orange); border-radius: 2px; transition: width 0.4s ease; }
+  .progress-fill  { height: 100%; background: #29ABE2; border-radius: 2px; transition: width 0.4s ease; }
   .card { background: var(--white); border-radius: 0 0 var(--radius) var(--radius); padding: 28px 24px 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
   .bubble { background: var(--gray-bg); border: 1px solid var(--gray-border); border-radius: 4px var(--radius) var(--radius) var(--radius); padding: 14px 16px; font-size: 14px; line-height: 1.65; color: #222; margin-bottom: 20px; }
   .bubble b { font-weight: 600; }
-  .bot-name { font-size: 11px; color: var(--gray-text); margin-bottom: 6px; font-weight: 600; }
+  .bot-name { font-size: 11px; color: #29ABE2; margin-bottom: 6px; font-weight: 600; }
   .step-label { font-size: 11px; color: var(--gray-text); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
   input[type=text], input[type=date], select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--gray-border); border-radius: var(--radius-sm); font-size: 14px; color: #222; background: var(--white); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
-  input:focus, select:focus { border-color: var(--orange); }
+  input:focus, select:focus { border-color: #29ABE2; }
   input::placeholder { color: #aaa; }
   label.field-label { display: block; font-size: 13px; font-weight: 500; color: #444; margin-bottom: 6px; margin-top: 14px; }
   label.field-label:first-of-type { margin-top: 0; }
   .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
   .opt { background: var(--white); border: 1.5px solid var(--gray-border); border-radius: var(--radius-sm); padding: 11px 14px; font-size: 14px; color: #222; cursor: pointer; text-align: left; transition: border-color 0.15s, background 0.15s; display: flex; align-items: center; gap: 10px; }
-  .opt:hover { border-color: var(--orange); background: #FFFBF2; }
-  .opt.selected { border-color: var(--orange); background: #FFF8EC; color: #7A4500; font-weight: 500; }
+  .opt:hover { border-color: #29ABE2; background: #E8F6FD; }
+  .opt.selected { border-color: #29ABE2; background: #E8F6FD; color: #1A7BAF; font-weight: 500; }
   .opt .radio { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--gray-border); flex-shrink: 0; transition: border-color 0.15s, background 0.15s; }
-  .opt.selected .radio { border-color: var(--orange); background: var(--orange); }
-  .btn-primary { width: 100%; padding: 13px; background: var(--dark); color: var(--orange); border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 6px; transition: opacity 0.2s; }
+  .opt.selected .radio { border-color: #29ABE2; background: #29ABE2; }
+  .btn-primary { width: 100%; padding: 13px; background: linear-gradient(135deg, #1A7BAF 0%, #29ABE2 100%); color: #ffffff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 6px; transition: opacity 0.2s; }
   .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
   .btn-primary:not(:disabled):hover { opacity: 0.88; }
   .slide-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
   .btn-nav { padding: 9px 18px; border: 1.5px solid var(--gray-border); border-radius: var(--radius-sm); background: var(--white); color: #333; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
   .btn-nav:hover { background: var(--gray-bg); }
-  .btn-nav.primary { background: var(--dark); color: var(--orange); border-color: var(--dark); }
+  .btn-nav.primary { background: linear-gradient(135deg, #1A7BAF 0%, #29ABE2 100%); color: #ffffff; border-color: #29ABE2; }
   .btn-nav.primary:hover { opacity: 0.88; }
   .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
   .slide-dots { display: flex; gap: 6px; }
   .sdot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray-border); transition: background 0.2s; }
-  .sdot.active { background: var(--dark); }
-  .sdot.done   { background: var(--orange); }
+  .sdot.active { background: #1A7BAF; }
+  .sdot.done   { background: #29ABE2; }
   .slide-icon  { font-size: 32px; margin-bottom: 12px; }
-  .slide-title { font-size: 17px; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+  .slide-title { font-size: 17px; font-weight: 700; color: #1A7BAF; margin-bottom: 12px; }
   .slide-body  { font-size: 14px; color: #444; line-height: 1.7; }
   .slide-body b { color: #111; font-weight: 600; }
   .tag { display: inline-block; background: #FFF3E0; color: #7A4500; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 20px; margin: 3px 3px 3px 0; }
   .tag.green { background: var(--green-bg); color: #1A6B3C; }
   .tag.blue  { background: var(--blue-bg);  color: #1A5276; }
   .info-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 9px; }
-  .info-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 7px; }
+  .info-dot { width: 6px; height: 6px; border-radius: 50%; background: #29ABE2; flex-shrink: 0; margin-top: 7px; }
   .box { border-radius: var(--radius-sm); padding: 16px 18px; margin-top: 4px; }
   .box.green  { background: var(--green-bg); border: 1px solid #A9DFBF; }
   .box.red    { background: var(--red-bg);   border: 1px solid #F5B7B1; }
@@ -83,9 +84,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   .summary-row .val { font-weight: 600; color: #222; text-align: right; max-width: 60%; }
   .divider { height: 1px; background: var(--gray-border); margin: 18px 0; }
   .faq-btn {
-    background: rgba(255,153,0,0.15);
-    color: #FF9900;
-    border: 1px solid rgba(255,153,0,0.35);
+    background: rgba(41,171,226,0.15);
+    color: #1A7BAF;
+    border: 1px solid rgba(41,171,226,0.4);
     border-radius: 20px;
     padding: 6px 12px;
     font-size: 12px;
@@ -93,7 +94,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     cursor: pointer;
     transition: background 0.15s;
   }
-  .faq-btn:hover { background: rgba(255,153,0,0.3); }
+  .faq-btn:hover { background: rgba(41,171,226,0.3); }
   .hidden { display: none; }
   .req-list { display: flex; flex-direction: column; gap: 6px; margin: 14px 0; }
   .req-item { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 9px 12px; border-radius: var(--radius-sm); background: var(--gray-bg); border: 1px solid var(--gray-border); }
@@ -105,10 +106,65 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <!-- Hidden Netlify form to capture submissions -->
 <!-- Formspree handles submissions via JS fetch -->
 
+<!-- TIME WINDOW CONTROL -->
+<div id="time-blocked" style="display:none;min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px;">
+  <div style="max-width:400px;width:100%;background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.1);overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#1A7BAF 0%,#29ABE2 100%);padding:24px;text-align:center;">
+      <div style="font-size:40px;margin-bottom:8px;">⏰</div>
+      <div style="font-size:18px;font-weight:700;color:#fff;">Acceso no disponible</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px;">Instapack · Amazon DMZ4</div>
+    </div>
+    <div style="padding:24px;text-align:center;">
+      <div id="time-msg" style="font-size:14px;color:#444;line-height:1.7;margin-bottom:16px;"></div>
+      <div style="font-size:12px;color:#888;">Si crees que hay un error, contacta con nosotros por el mismo WhatsApp desde el que recibiste este enlace.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var now = new Date();
+  var h = now.getHours();
+  var m = now.getMinutes();
+  var totalMin = h * 60 + m;
+
+  // Window: abierto todo el dia (cambiar el dia de la entrevista)
+  var START_H = 0,  START_M = 0;
+  var END_H   = 23, END_M   = 59;
+  var startMin = START_H * 60 + START_M;
+  var endMin   = END_H   * 60 + END_M;
+
+  function pad(n){ return n < 10 ? '0'+n : n; }
+  var startStr = pad(START_H)+':'+pad(START_M)+'h';
+  var endStr   = pad(END_H)+':'+pad(END_M)+'h';
+
+  var blocked = false;
+  var msg = '';
+
+  if(totalMin < startMin){
+    blocked = true;
+    msg = 'Este enlace estará disponible a partir de las <b>'+startStr+'</b>.<br><br>Por favor, vuelve en ese horario para completar el proceso de selección.';
+  } else if(totalMin >= endMin){
+    blocked = true;
+    msg = 'El plazo para acceder a esta oferta ya ha finalizado.<br><br>El acceso estaba disponible de <b>'+startStr+'</b> a <b>'+endStr+'</b>.<br><br>Si no pudiste acceder a tiempo, contacta con nosotros por WhatsApp.';
+  }
+
+  if(blocked){
+    document.getElementById('time-msg').innerHTML = msg;
+    document.getElementById('time-blocked').style.display = 'flex';
+    // Hide main container when DOM is ready
+    document.addEventListener('DOMContentLoaded', function(){
+      var c = document.querySelector('.container');
+      if(c) c.style.display = 'none';
+    });
+  }
+})();
+</script>
+
 <div class="container">
 
   <div class="header">
-    <div class="logo">INS<br>PACK</div>
+    <img src="data:image/png;base64,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APer/wDgFUgAFpuu8+b30z+AHXefN76Z/AFWQAFsGPZj700SPzc3tx9W/wAAffXl/Nx6b/AFTAAFsH/Zj760aPzc2vx9W/wB5eu8+b30z+AKsgALTdd583vpn8AZ4vsxN40v+nWlpW/71b/wCqQAC2fXl/Nx6b/ADry/m49N/gCpgAC03XefN76Z/ADrvPm99M/gCrIAC1LHswN6dJf5vL24urX4A9XXl/Nx6b/AFTAAFs+vL+bj03+APK/7MDfXTX+by1+Lq1+AKrAALTdd583vpn8AOu8+b30z+AKsgALZ9eX83Hpv8AOvL+bj03+AKmAALWyvZib/AKP/AE60dG//AHq//gGDrvPm99M/gCrIAC03XefN76Z/AHqY9mPvTRI/Nze3H1b/AABU8ABbPry/m49N/gD4f9mPvrRo/Nza/H1b/AFTwAFpuu8+b30z+AHXefN76Z/AFWQAFrYvsxN40v8Ap1paVv8AvVv/AADN15fzcem/wBUwABbPry/m49N/gDxdd583vpn8AVZAAWm67z5vfTP4A+2PZgb06S/zeXtxdWvwBVYABbPry/m49N/gB15fzcem/wAAVMAAWpf9mBvrpr/N5a/F1a/AHx13nze+mfwBVkABabrvPm99M/gD29eX83Hpv8AVMAASb7JrNf8APT+T/wDcHULqNwn/AOZwnft+3r9hGjbevDfS4rawjIAB/9k=" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="Instapack" />
     <div class="header-text">
       <h1>Instapack · Amazon DMZ4</h1>
       <p>Repartidor/a de paquetería en furgoneta</p>
@@ -265,18 +321,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
       <!-- AGENTE IA -->
       <div id="agente-wrap" style="margin-bottom:20px;display:none;width:100%;">
-        <div style="background:linear-gradient(135deg,#1A1A2E 0%,#232F3E 100%);border-radius:12px;padding:16px 18px;">
+        <div style="background:linear-gradient(135deg,#1A7BAF 0%,#29ABE2 100%);border-radius:12px;padding:16px 18px;">
 
           <!-- Header -->
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
             <div style="width:38px;height:38px;background:#FF9900;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🤖</div>
             <div style="flex:1;">
-              <div style="font-size:13px;font-weight:700;color:#FF9900;">InstaBot · Asistente Instapack</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.5);">Asistente virtual · Online</div>
+              <div style="font-size:13px;font-weight:700;color:#ffffff;">InstaBot · Asistente Instapack</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.8);">Asistente virtual · Online</div>
             </div>
             <button id="btn-activar-voz"
               onclick="activarVoz()"
-              style="background:#FF9900;color:#1A1A2E;border:none;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;outline:none;animation:pulso 1.5s infinite;">
+              style="background:#ffffff;color:#1A7BAF;border:none;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;outline:none;animation:pulso 1.5s infinite;">
               🔊 Escuchar
             </button>
             <button id="btn-parar-voz"
@@ -330,12 +386,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <div class="slide-body">
           El puesto se realiza en la nave de <b>Amazon Logistics DMZ4, Getafe</b>. Cada día llegarás a la nave, cargarás tu ruta y saldrás a repartir.<br><br>
           <b>Zonas de reparto:</b><br><br>
-          <span class="tag">Villaverde Alto y Bajo</span>
-          <span class="tag">Getafe Centro</span>
-          <span class="tag">Zona Norte de Getafe</span>
-          <span class="tag">Los Molinos</span>
-          <span class="tag">Villa de Vallecas</span>
-          <span class="tag">Perales del Río</span>
+          <span class="tag">Zona de Villaverde · 28021 - 28041</span>
+          <span class="tag">Zona de Getafe · 28901 - 28902 - 28903 - 28904</span>
+          <span class="tag">Zona de Villa de Vallecas · 28031 - 28051</span>
+          <span class="tag">Zona de Perales del Río · 28909</span>
         </div>
       </div>
 
@@ -346,11 +400,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <div class="slide-body">
           <div class="info-row"><div class="info-dot"></div><div>Trabajarás como <b>repartidor/a de paquetería en furgoneta</b> para Instapack dentro de la red Amazon.</div></div>
           <div class="info-row"><div class="info-dot"></div><div><b>Hora de entrada: 10:00h.</b> Llegarás a la nave de Getafe, cargarás tu ruta y saldrás a repartir por tu zona asignada.</div></div>
-          <div class="info-row"><div class="info-dot"></div><div><b>Las rutas siempre hay que terminarlas</b>, independientemente del volumen del día.</div></div>
-          <div class="info-row"><div class="info-dot"></div><div>Al terminar la ruta <b>llamas a tráfico</b> para comunicarlo. Una vez autoricemos el retorno, vuelves a la estación, descargas las sacas, dejas la furgoneta en orden y depositas las llaves.</div></div>
+          <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:12px 14px;margin:10px 0;">
+            <div style="font-size:13px;font-weight:700;color:#1A6B3C;margin-bottom:6px;">⏱️ Duración de las rutas — 9 horas</div>
+            <div style="font-size:13px;color:#1A6B3C;line-height:1.6;">
+              La jornada es de <b>10:00h a 19:00h</b> (9 horas abonadas).<br><br>
+              ✅ Si terminas la ruta antes de las 19:00h: nos llamas a tráfico, te damos autorización y puedes retornar a base y marcharte a casa. <b>Cobrarás las 9 horas igualmente.</b><br><br>
+              ⚠️ Si la ruta se alarga más allá de las 19:00h: hay que terminarla siempre, sin excepción. <b>También cobrarás las 9 horas.</b>
+            </div>
+          </div>
+          <div class="info-row"><div class="info-dot"></div><div>Al retornar: descargas las sacas, dejas la furgoneta en orden y depositas las llaves.</div></div>
           <div style="background:#F0F4FF;border:1px solid #C5D0F0;border-radius:10px;padding:12px 14px;margin-top:10px;">
-            <div style="font-size:13px;font-weight:700;color:#1A1A2E;margin-bottom:6px;">🚐 Importante sobre la furgoneta</div>
-            <div style="font-size:13px;color:#333;line-height:1.6;">La furgoneta <b>no se puede llevar a casa</b>. Queda aparcada en la nave al finalizar cada jornada.</div>
+            <div style="font-size:13px;font-weight:700;color:#1A1A2E;margin-bottom:6px;">🚐 La furgoneta no se lleva a casa</div>
+            <div style="font-size:13px;color:#333;line-height:1.6;">La furgoneta queda <b>siempre aparcada en la nave</b> al finalizar cada jornada.</div>
           </div>
         </div>
       </div>
@@ -360,11 +421,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <div class="slide-icon">📅</div>
         <div class="slide-title">Cuadrantes y fichajes</div>
         <div class="slide-body">
-          <div class="info-row"><div class="info-dot"></div><div>Se trabaja de <b>lunes a domingo</b>, con <b>2 días de descanso rotativos</b> a la semana.</div></div>
-          <div class="info-row"><div class="info-dot"></div><div>Cada <b>martes</b> se publican los cuadrantes de la semana siguiente (de domingo a sábado).</div></div>
-          <div style="background:#F0F4FF;border:1px solid #C5D0F0;border-radius:10px;padding:14px 16px;margin:10px 0;">
-            <div style="font-size:13px;font-weight:700;color:#1A1A2E;margin-bottom:8px;">📱 App WOFFU — Obligatorio</div>
-            <div style="font-size:13px;color:#333;line-height:1.6;">Los cuadrantes se consultan en <b>WOFFU</b>, a la que tendrás acceso desde el primer día. Es <b>obligatorio fichar la entrada al iniciar la jornada y la salida al finalizarla</b>. Todos los fichajes quedan registrados en la app.</div>
+          <div class="info-row"><div class="info-dot"></div><div>Se trabaja de <b>lunes a domingo</b>, con <b>2 días de descanso rotativos</b> a la semana. Los cuadrantes los elabora el <b>jefe de tráfico</b> encargado.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Cada <b>martes</b> se publican los cuadrantes de la semana siguiente. <b>Una vez publicados no se modifican</b>, salvo causa médica justificada.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Puedes solicitar el día libre que necesites <b>con antelación</b>, y se cuadrará con el otro descanso de la semana. Los descansos <b>no tienen por qué ser correlativos</b> según el volumen de la semana.</div></div>
+          <div style="background:#FFF8EC;border:1px solid #FDEBD0;border-radius:10px;padding:12px 14px;margin:10px 0;">
+            <div style="font-size:13px;font-weight:700;color:#7A4500;margin-bottom:6px;">📌 Festivos y cierres</div>
+            <div style="font-size:13px;color:#7A4500;line-height:1.6;">Se <b>trabajan los festivos</b> y se cobra un <b>plus económico</b> esos días. Los únicos días de cierre son el <b>25 de diciembre</b> y el <b>1 de enero</b>. Cualquier otro cierre general se comunicará con antelación.</div>
+          </div>
+          <div style="background:#F0F4FF;border:1px solid #C5D0F0;border-radius:10px;padding:12px 14px;margin:10px 0;">
+            <div style="font-size:13px;font-weight:700;color:#1A1A2E;margin-bottom:6px;">📱 App WOFFU — Obligatorio</div>
+            <div style="font-size:13px;color:#333;line-height:1.6;">
+              Los cuadrantes se consultan en <b>WOFFU</b>. Es <b>obligatorio fichar la entrada y la salida</b> cada día. Todos los fichajes quedan registrados.<br><br>
+              Tendrás acceso a WOFFU <b>desde el primer día</b> que te incorpores. Tus credenciales de acceso te los facilitará tu <b>ETT</b>. Si no los recibieras, escríbenos directamente por este mismo WhatsApp y te los proporcionamos nosotros.
+            </div>
           </div>
         </div>
       </div>
@@ -374,13 +443,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <div class="slide-icon">💰</div>
         <div class="slide-title">Retribución e incentivos</div>
         <div class="slide-body">
-          <div class="info-row"><div class="info-dot"></div><div>Las rutas son de <b>9 horas</b>. En cuanto termines la ruta y tráfico autorice el retorno, puedes marcharte a casa — <b>siempre cobrarás las 9 horas completas</b>.</div></div>
-          <div class="info-row"><div class="info-dot"></div><div>Del mismo modo, si algún día la ruta se alarga un poco más de lo habitual, <b>también cobrarás las 9 horas</b>. La retribución es fija por jornada.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>Cada día que trabajas se generan <b>9 horas</b>. <b>Todas las horas generadas en el mes se abonan en nómina</b>, tanto si terminas antes como si la ruta se alarga.</div></div>
+          <div class="info-row"><div class="info-dot"></div><div>El <b>precio de la hora</b> lo gestiona tu ETT (<b id="ett-nombre">tu ETT</b>). Ellos son los responsables de tu salario — consúltales directamente para cualquier duda económica.</div></div>
           <div style="background:#FFFBEC;border:1px solid #FFE082;border-radius:10px;padding:14px 16px;margin:10px 0;">
             <div style="font-size:13px;font-weight:700;color:#7A4500;margin-bottom:6px;">⭐ Incentivo conductor/a experto/a</div>
-            <div style="font-size:13px;color:#7A4500;line-height:1.6;">Cuando seas conductor/a experto/a, <b>cada día que termines sin paquetería pendiente recibirás 5€ de incentivo</b>. Se calcula a final de mes y se abona directamente en nómina.</div>
+            <div style="font-size:13px;color:#7A4500;line-height:1.6;">Una vez seas conductor/a experto/a, <b>cada día que termines sin paquetería pendiente recibirás 5€ de incentivo</b>. Se hace un cómputo total a final de mes y se abona directamente en nómina.</div>
           </div>
-          <div class="info-row"><div class="info-dot"></div><div>Para consultas sobre <b>salario</b>, contacta con tu ETT (<b id="ett-nombre">tu ETT</b>).</div></div>
+          <div style="background:#E8F6FD;border:1px solid #AED6F1;border-radius:10px;padding:14px 16px;margin:10px 0;">
+            <div style="font-size:13px;font-weight:700;color:#1A7BAF;margin-bottom:6px;">🌟 Posibilidad de paso a plantilla</div>
+            <div style="font-size:13px;color:#1A5276;line-height:1.6;">La <b>continuidad en el trabajo dependerá de tu desempeño diario</b>. Los conductores que demuestren compromiso, puntualidad y profesionalidad tienen <b>posibilidad real de incorporarse a la plantilla fija</b> de Instapack.</div>
+          </div>
         </div>
       </div>
 
@@ -389,26 +461,39 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <div class="slide-icon">🎁</div>
         <div class="slide-title">Lo que te proporcionamos</div>
         <div class="slide-body">
-          No necesitas nada propio para trabajar. Instapack te facilita todo:<br><br>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 12px;">
+          Instapack te facilita todo lo que necesitas para trabajar:<br><br>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 14px;">
             <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 12px;text-align:center;">
               <div style="font-size:24px;margin-bottom:6px;">🚐</div>
               <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Furgoneta de reparto</div>
             </div>
             <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 12px;text-align:center;">
               <div style="font-size:24px;margin-bottom:6px;">📱</div>
-              <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Terminal de trabajo</div>
+              <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Terminal + cargador</div>
             </div>
             <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 12px;text-align:center;">
               <div style="font-size:24px;margin-bottom:6px;">📡</div>
-              <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Línea de teléfono</div>
+              <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Línea + datos incluidos</div>
             </div>
             <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 12px;text-align:center;">
               <div style="font-size:24px;margin-bottom:6px;">🗺️</div>
               <div style="font-size:13px;font-weight:600;color:#1A6B3C;">Ruta asignada</div>
             </div>
           </div>
-          Solo necesitas presentarte con ganas de trabajar.
+
+          <div style="background:#FFF3E0;border:1.5px solid #FFB74D;border-radius:10px;padding:13px 15px;margin-bottom:10px;">
+            <div style="font-size:13px;font-weight:700;color:#E65100;margin-bottom:6px;">⚠️ Responsabilidad sobre el terminal</div>
+            <div style="font-size:13px;color:#7F3B00;line-height:1.65;">El terminal te lo llevas a casa. Desde el momento en que te lo entregamos, <b>eres responsable de él</b>. Cuídalo como si fuera tuyo porque, a efectos prácticos, lo es mientras dure tu relación laboral con nosotros.</div>
+          </div>
+
+          <div style="background:#FDEDEC;border:1.5px solid #F5B7B1;border-radius:10px;padding:13px 15px;margin-bottom:10px;">
+            <div style="font-size:13px;font-weight:700;color:#922B21;margin-bottom:6px;">🔒 Uso exclusivamente laboral</div>
+            <div style="font-size:13px;color:#922B21;line-height:1.65;">El teléfono y los datos son para <b>uso exclusivo laboral</b>. Queda terminantemente prohibido cualquier uso personal del dispositivo o de los datos contratados.</div>
+          </div>
+
+          <div style="background:#F4FAFD;border:1px solid #AED6F1;border-radius:10px;padding:12px 15px;">
+            <div style="font-size:13px;color:#1A5276;line-height:1.6;">💡 <b>Pequeño detalle:</b> No proporcionamos batería externa ni cargador de coche — eso corre a cuenta de cada uno. ¡Una pequeña inversión para no quedarte sin batería en ruta!</div>
+          </div>
         </div>
       </div>
 
@@ -760,12 +845,16 @@ function buildOffer(){
   // Slide 5 dinámico
   var s5html;
   if(state.amazonExp==='si' && state.noFormacion){
-    s5html = '<div class="box green"><p><b>¡Buenas noticias!</b> Como llevas menos de 180 días fuera de Amazon, <b>no necesitas realizar la formación online</b>.<br><br>Te incorporarás directamente con una breve formación en carretera junto a un compañero el primer día.</p></div>';
+    s5html = '<div class="box green"><p><b>¡Buenas noticias!</b> Como llevas menos de 180 días fuera de Amazon, <b>no necesitas realizar la formación online</b>.<br><br>Te avisaremos por <b>WhatsApp</b> con el día de inicio. Te indicaremos el lugar donde presentarte para ese primer día en ruta.</p></div>';
   } else {
     s5html = '<div class="info-row"><div class="info-dot"></div><div>Recibirás el enlace por <b>WhatsApp</b> al número que facilitaste a tu ETT.</div></div>' +
              '<div class="info-row"><div class="info-dot"></div><div>Formación <b>100% online</b>, de <b>9:00h a 16:30h</b> (8 horas). Es obligatoria antes de empezar.</div></div>' +
-             '<div class="info-row"><div class="info-dot"></div><div>Al día siguiente realizarás una <b>formación en carretera</b> acompañado por un compañero.</div></div>' +
-             '<div class="info-row"><div class="info-dot"></div><div>A partir de ese momento ya empiezas a trabajar de forma autónoma.</div></div>';
+             '<div class="info-row"><div class="info-dot"></div><div><b>La formación es remunerada</b> — las horas de formación se abonan en nómina.</div></div>' +
+             '<div style="background:#E8F6FD;border:1px solid #AED6F1;border-radius:10px;padding:12px 14px;margin:8px 0;">' +
+             '<div style="font-size:13px;font-weight:700;color:#1A7BAF;margin-bottom:6px;">🚐 Formación en carretera</div>' +
+             '<div style="font-size:13px;color:#1A5276;line-height:1.6;">Una vez finalices el curso online y nos pases el <b>diploma</b>, te informaremos del <b>lugar donde presentarte</b> para realizar la formación en carretera. Esta formación dura <b>9 horas</b> (como una ruta normal) acompañado por un compañero experto.</div>' +
+             '</div>' +
+             '<div class="info-row"><div class="info-dot"></div><div>A partir de ese momento empiezas a trabajar de forma autónoma con el plan escalonado de 11 días.</div></div>';
   }
   document.getElementById('slide6-body').innerHTML = s5html;
 
@@ -795,16 +884,37 @@ function renderSlide(n){
   if(n===state.totalSlides-1){
     nb.textContent='¡Listo!';
     nb.onclick=function(){ nb.disabled=true; nb.textContent='Completado ✓'; setProgress(100); };
-    // InstaBot asks if everything is clear
-    setTimeout(function(){
-      var nombre = state.candidate ? state.candidate.nombre.split(' ')[0] : '';
-      encolarVoz('Hola ' + nombre + ', ya hemos terminado el recorrido. Espero que todo haya quedado claro. Si tienes alguna duda sobre salario, horarios, zonas, formacion o dias libres, pulsa la pregunta que necesites y te respondo al momento.');
-    }, 800);
   } else {
     nb.textContent='Siguiente →';
     nb.onclick=function(){ changeSlide(1); };
   }
   setProgress(70 + Math.round((n/(state.totalSlides-1))*30));
+
+  // InstaBot explains current slide
+  if(typeof instabotDice === 'function' && agenteStarted){
+    var nombre = state.candidate ? state.candidate.nombre.split(' ')[0] : '';
+    var msgs = [
+      'Este es tu futuro puesto de trabajo. Repartidor o repartidora de paqueteria en furgoneta para Instapack, empresa colaboradora de Amazon Logistics en Getafe.',
+      'Trabajaras en la estacion DMZ4 de Getafe. Las zonas de reparto son Villaverde, Getafe, Villa de Vallecas y Perales del Rio.',
+      'Cada dia entras a las 10 de la mañana y la jornada es hasta las 19:00h, 9 horas abonadas. Si terminas la ruta antes de las 19, nos llamas a trafico y con nuestra autorizacion puedes volver a base y marcharte a casa cobrando las 9 horas igualmente. Si la ruta se alarga mas de las 19, hay que terminarla siempre y tambien cobras las 9 horas. Al retornar dejas la furgoneta en orden y las llaves en base.',
+      'Los cuadrantes los hace el jefe de trafico y se publican cada martes en WOFFU. Tendras acceso a WOFFU desde el primer dia, tus credenciales te los da tu ETT y si no los recibes nos escribes y te los damos. Una vez publicado el cuadrante no se cambia salvo cita medica. Puedes pedir el dia que necesites con antelacion. Los festivos se trabajan con plus. Solo cerramos el 25 de diciembre y el 1 de enero. Es obligatorio fichar entrada y salida cada dia.',
+      'Cada dia que trabajas generas 9 horas que se abonan en nomina. El precio de la hora te lo indica tu ETT, ellos gestionan tu salario. Ademas, cuando seas conductor experto, cada dia que termines sin paqueteria te llevamos 5 euros extra en nomina. Y lo mejor, si demuestras compromiso y buen desempeño tienes posibilidad real de pasar a plantilla fija de Instapack.',
+      'La empresa te proporciona furgoneta, terminal con cargador y linea con datos incluidos. El terminal te lo llevas a casa pero eres responsable de el desde el primer momento. El telefono y los datos son para uso exclusivo laboral, no para uso personal. La bateria externa y el cargador de coche corren a tu cuenta, pero merece la pena para no quedarte sin bateria en ruta.',
+      '',  // slide6 formacion - handled dynamically
+      'Una vez superada la formacion, los primeros 11 dias trabajaras de forma progresiva. Del 1 al 3 con el 60%, del 4 al 7 con el 75%, del 7 al 11 con el 90%. A partir del dia 12 ya eres conductor experto.',
+      'Ya hemos terminado ' + nombre + '. Si tienes alguna duda antes de decidir, pulsa cualquiera de los botones de abajo y te respondo al momento.'
+    ];
+    var msg = msgs[n];
+    if(n === 6){
+      // Formacion slide - dynamic based on experience
+      if(state.amazonExp === 'si' && state.noFormacion){
+        msg = 'Como llevas menos de 180 dias fuera de Amazon, no necesitas hacer la formacion online. Te comunicaremos directamente el dia de inicio en ruta y te indicaremos el lugar donde presentarte.';
+      } else {
+        msg = 'Recibiras el enlace de la formacion por WhatsApp. Es totalmente online de 9 a 16:30 horas y es remunerada. Una vez finalices el curso y nos pases el diploma, te diremos donde presentarte para la formacion en carretera, que dura 9 horas como una ruta normal.';
+      }
+    }
+    if(msg) setTimeout(function(){ instabotDice(msg); }, 600);
+  }
 }
 
 function changeSlide(dir){
@@ -816,49 +926,44 @@ function responder(choice){
   var btnA = document.getElementById('btn-acepta');
   var btnR = document.getElementById('btn-rechaza');
   var rf   = document.getElementById('respuesta-final');
+
+  // Disable buttons immediately to prevent double tap
   btnA.disabled = true;
   btnR.disabled = true;
+  btnA.style.opacity = '0.6';
+  btnR.style.opacity = '0.6';
   state.respuesta = choice;
 
-  rf.style.color = 'rgba(255,255,255,0.6)';
-  rf.innerHTML = 'Registrando respuesta...';
+  // Show confirmation IMMEDIATELY — no waiting for network
+  mostrarConfirmacion(choice, rf, btnA, btnR);
 
-  var now = new Date();
-  var fecha = now.toLocaleString('es-ES');
+  // Play success sound if acepta
+  if(choice === 'acepta' && typeof playSuccessSound === 'function'){
+    playSuccessSound();
+  }
 
-  // Submit to Netlify Forms
-  var formData = new FormData();
-  formData.append('form-name',   'respuestas-candidatos');
-  formData.append('nombre',      c.nombre);
-  formData.append('ett',         c.ett);
-  formData.append('respuesta',   choice === 'acepta' ? 'ACEPTA' : 'RECHAZA');
-  formData.append('fecha',       fecha);
-  formData.append('amazon_exp',  state.amazonExp === 'si' ? 'Sí — ' + (state.empresa||'') + ' / ' + (state.estacion||'') : 'No');
-  formData.append('dias_fuera',  state.diasFuera !== null ? state.diasFuera + ' días' : 'N/A');
-  formData.append('formacion',   state.noFormacion ? 'No necesaria' : 'Requerida');
-
-  // Save to localStorage to prevent double submission
-  var lsKey = 'done_' + c.nombre.toLowerCase().replace(/\s+/g,'_');
+  // Send data in background (fire and forget)
   var now2 = new Date();
   var f2 = now2.getDate().toString().padStart(2,'0')+'/'+
             (now2.getMonth()+1).toString().padStart(2,'0')+'/'+
             now2.getFullYear()+' '+
             now2.getHours().toString().padStart(2,'0')+':'+
             now2.getMinutes().toString().padStart(2,'0');
+
   try{
+    var lsKey = 'done_' + c.nombre.toLowerCase().replace(/\s+/g,'_');
     localStorage.setItem(lsKey, JSON.stringify({choice:choice, fecha:f2}));
   }catch(e){}
 
-  // Send to Formspree
   enviarFormspree({
     nombre: c.nombre,
     ett: c.ett,
     respuesta: choice === 'acepta' ? 'ACEPTA LA OFERTA' : 'RECHAZA LA OFERTA',
     fecha: f2,
-    amazon_exp: state.amazonExp === 'si' ? 'Sí — '+(state.empresa||'')+' / '+(state.estacion||'') : 'No',
-    dias_fuera: state.diasFuera !== null ? state.diasFuera+' días' : 'N/A',
+    amazon_exp: state.amazonExp === 'si' ? 'Si — '+(state.empresa||'')+' / '+(state.estacion||'') : 'No',
+    dias_fuera: state.diasFuera !== null ? state.diasFuera+' dias' : 'N/A',
     formacion: state.noFormacion ? 'No necesaria' : 'Requerida'
-  }, function(){ mostrarConfirmacion(choice, rf, btnA, btnR); });
+  }, function(){});
 }
 
 function mostrarConfirmacion(choice, rf, btnA, btnR){
@@ -882,10 +987,10 @@ function mostrarConfirmacion(choice, rf, btnA, btnR){
 <div id="admin-wrap" style="display:none;max-width:560px;margin:24px auto 48px;padding:0 16px;">
 
   <div style="background:#1A1A2E;border-radius:12px 12px 0 0;padding:18px 22px;display:flex;align-items:center;gap:14px;">
-    <div style="width:40px;height:40px;background:#FF9900;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#1A1A2E;text-align:center;line-height:1.3;flex-shrink:0;">INS<br>PACK</div>
+    <div style="width:40px;height:40px;background:#29ABE2;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#1A1A2E;text-align:center;line-height:1.3;flex-shrink:0;">INS<br>PACK</div>
     <div>
       <div style="font-size:15px;font-weight:600;color:#fff;">Panel de Administración</div>
-      <div style="font-size:11px;color:#FF9900;margin-top:2px;">Seguimiento de candidatos · DMZ4</div>
+      <div style="font-size:11px;color:#29ABE2;margin-top:2px;">Seguimiento de candidatos · DMZ4</div>
     </div>
   </div>
 
@@ -1179,7 +1284,7 @@ function leerTexto(texto){
   var v = getVoz();
   if(v) u.voice = v;
   u.lang = 'es-ES';
-  u.rate = 0.82;
+  u.rate = 0.95;
   u.pitch = 1.05;
   u.volume = 1;
   u.onend = function(){
@@ -1280,37 +1385,26 @@ async function startAgente(){
   agenteStarted = true;
   var c = state.candidate;
   var nombre = c.nombre.split(' ')[0];
+  setTimeout(function(){
+    instabotDice('Hola ' + nombre + ', soy InstaBot, el asistente virtual de Instapack. Voy a acompañarte pagina a pagina explicandote todo sobre el puesto. Pulsa Siguiente cuando quieras avanzar.');
+  }, 400);
+}
 
-  // Read the offer step by step with delays to feel natural
-  var mensajes = [
-    "Hola " + nombre + " 👋 Me llamo InstaBot, soy InstaBot, el asistente virtual de Instapack. Antes de que veas las diapositivas, déjame contarte personalmente en qué consiste el puesto. ¡Solo serán unos segundos!",
-    "📍 Trabajarás como <b>repartidor/a de paquetería en furgoneta</b> para Instapack, empresa colaboradora de Amazon Logistics, en nuestra estación de <b>Getafe (DMZ4)</b>.",
-    "⏰ La jornada empieza a las <b>10:00h</b>. Llegas, cargas tu ruta y sales a repartir por zonas como Villaverde, Getafe Centro, Villa de Vallecas o Perales del Río, entre otras.",
-    "💰 Se abonan <b>9 horas fijas cada día</b> que trabajas — tanto si terminas antes como si tardas un poco más. En cuanto termines la ruta y nosotros autoricemos el retorno, te vas a casa con las 9h cobradas.",
-    "🚐 La empresa te proporciona <b>furgoneta, terminal y línea de teléfono</b>. No necesitas nada tuyo. Eso sí, la furgoneta queda en la nave al terminar, no se lleva a casa.",
-    "📅 Trabajamos de lunes a domingo con <b>2 días de descanso rotativos</b>. Cada martes recibes el cuadrante de la semana siguiente en la app <b>WOFFU</b>.",
-    "⭐ Y lo mejor: cuando seas conductor/a experto/a, <b>cada día que termines sin paquetería pendiente te llevás 5€ extra</b> en nómina a final de mes.",
-    "Eso es todo " + nombre + " 😊 Ahora puedes ver las diapositivas para más detalle. Y si tienes alguna pregunta, aquí estoy. ¿Qué te parece la oferta?"
-  ];
-
-  async function mostrarMensajes(i){
-    if(i >= mensajes.length) return;
-    await new Promise(function(r){ setTimeout(r, i === 0 ? 300 : 1800); });
-    // Show typing indicator
-    var chat = document.getElementById('agente-chat');
-    var typing = document.createElement('div');
-    typing.id = 'typing-msg';
-    typing.style.cssText = 'margin-bottom:10px;display:flex;gap:8px;align-items:center;';
-    typing.innerHTML = '<div style="font-size:14px;flex-shrink:0;">🤖</div><div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;font-size:13px;color:rgba(255,255,255,0.5);">escribiendo...</div>';
-    chat.appendChild(typing);
-    await new Promise(function(r){ setTimeout(r, 900); });
+function instabotDice(texto){
+  speechSynthesis.cancel();
+  colaMsgs = [];
+  leyendo = false;
+  var chat = document.getElementById('agente-chat');
+  var typing = document.createElement('div');
+  typing.id = 'typing-msg';
+  typing.style.cssText = 'margin-bottom:10px;display:flex;gap:8px;align-items:center;';
+  typing.innerHTML = '<div style="font-size:15px;flex-shrink:0;">🤖</div><div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:9px 13px;font-size:13px;color:rgba(255,255,255,0.4);">escribiendo...</div>';
+  chat.appendChild(typing);
+  setTimeout(function(){
     var t = document.getElementById('typing-msg');
     if(t) t.remove();
-    agenteAddMsg('assistant', mensajes[i]);
-    mostrarMensajes(i + 1);
-  }
-
-  mostrarMensajes(0);
+    agenteAddMsg('assistant', texto);
+  }, 700);
 }
 
 
@@ -1372,12 +1466,12 @@ function faqPregunta(tipo){
   leyendo = false;
 
   var respuestas = {
-    salario: 'El salario se compone de <b>9 horas diarias fijas</b> cada dia que trabajes, tanto si terminas antes como si tardas un poco mas. Ademas, una vez seas conductor/a experto/a, recibiras <b>5 euros de incentivo por cada dia que termines sin paqueteria pendiente</b>, abonados en nomina a final de mes. Para el detalle exacto del salario hora consulta con tu ETT.',
-    diaslibres: 'Los dias de descanso los asigna el <b>jefe de trafico encargado</b> cada semana segun las necesidades del servicio. No tienen por que ser dias correlativos — pueden ser separados o juntos dependiendo del cuadrante semanal. Se publican cada martes en la app WOFFU.',
-    zonas: 'Las zonas de reparto que cubrimos son: <b>Villaverde</b> (28021 - 28041), <b>Getafe</b> (28901 - 28902 - 28903 - 28904) y <b>Villa de Vallecas</b> (28031 - 28051).',
-    horarios: 'La hora de entrada es a las <b>10:00h</b>. Las rutas duran aproximadamente hasta las <b>19:00h</b>, completando asi las 9 horas diarias. Si terminas tu ruta antes de tiempo, con nuestra autorizacion podras marcharte a casa igualmente cobrando las 9 horas completas.',
+    salario: 'Cada dia de trabajo generas <b>9 horas que se abonan en nomina</b>. El <b>precio por hora lo gestiona tu ETT</b> (<span id="faq-ett"></span>), consultalos directamente para conocer tu salario exacto. Ademas, una vez seas conductor experto, <b>cada dia que termines sin paqueteria recibiras 5 euros de incentivo</b> en nomina a final de mes.',
+    diaslibres: 'Los dias de descanso los asigna el <b>jefe de trafico</b> cada semana. Puedes solicitar el dia que necesites con antelacion y se cuadrara con el otro descanso. No tienen por que ser correlativos segun el volumen de la semana. Una vez publicado el cuadrante no se modifica salvo cita medica. Los <b>festivos se trabajan</b> cobrando un plus economico. Solo cerramos el <b>25 de diciembre</b> y el <b>1 de enero</b>.',
+    zonas: 'Las zonas de reparto son: <b>Villaverde</b> (28021 - 28041), <b>Getafe</b> (28901 - 28902 - 28903 - 28904), <b>Villa de Vallecas</b> (28031 - 28051) y <b>Perales del Rio</b> (28909).',
+    horarios: 'La jornada es de <b>10:00h a 19:00h</b>, 9 horas abonadas. Si terminas la ruta antes de las 19:00h, llamas a trafico y con nuestra autorizacion retornas a base y te marchas a casa cobrando las 9 horas completas. Si la ruta se alarga mas alla de las 19:00h, hay que terminarla siempre y <b>tambien cobras las 9 horas</b>.',
     cuandoformacion: 'La fecha de inicio de la formacion te la comunicaremos <b>por WhatsApp al numero que facilitaste a tu ETT</b>. Primero tenemos que crear tu cuenta en el sistema, y en cuanto este lista te avisamos con las fechas.',
-    tipformacion: 'La formacion es <b>totalmente online</b> con una duracion de 8 horas (9:00h a 16:30h). A no ser que por normativa de Amazon deba ser presencial, siempre se realiza de forma online.',
+    tipformacion: 'La formacion es <b>totalmente online</b>, de 9:00h a 16:30h (8 horas) y es <b>remunerada</b>. Una vez finalices y nos pases el diploma, te indicamos donde presentarte para la <b>formacion en carretera de 9 horas</b>. A no ser que por normativa de Amazon deba ser presencial, siempre online.',
     furgoneta: 'Las furgonetas <b>no se pueden llevar a casa bajo ninguna circunstancia</b>. Al finalizar cada jornada, la furgoneta queda aparcada en base (la nave de Getafe). Las furgonetas siempre duermen en base.'
   };
   var r = respuestas[tipo];
