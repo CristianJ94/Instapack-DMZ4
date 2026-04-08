@@ -500,30 +500,33 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <script>
 var CANDIDATES = [
-  {"ett":"GI GROUP","nombre":"Silvia Tevar Martinez","dni":"53416108B"},
-  {"ett":"GI GROUP","nombre":"Mehdi Bakkali","dni":"X8395952D"},
-  {"ett":"GI GROUP","nombre":"Nerea Elizabeth Paredes Peña","dni":"47312997L"},
-  {"ett":"GI GROUP","nombre":"Alberto Ciprian Chirosca","dni":"X9539555Y"},
-  {"ett":"GI GROUP","nombre":"Pedro Henrique Rezende de Barros","dni":"Z0986165E"},
-  {"ett":"GI GROUP","nombre":"Laura Aguado Castaño","dni":"49096642Z"},
-  {"ett":"GI GROUP","nombre":"Emmanuel Nyan Plange Coffie","dni":"51758169G"},
-  {"ett":"GI GROUP","nombre":"Christian Nuñez Martin","dni":"49095814Z"},
-  {"ett":"GI GROUP","nombre":"Daniel Arroyo de Opazo","dni":"54524120K"},
-  {"ett":"ADECCO","nombre":"Nadia Boudagohuj Amar","dni":"49747389E"},
-  {"ett":"ADECCO","nombre":"Raul Alegre","dni":"48204230W"},
-  {"ett":"ADECCO","nombre":"Alex Danilo España Mejia","dni":"61293079B"},
-  {"ett":"ADECCO","nombre":"Israel Bravo De Castro","dni":"02278137X"},
-  {"ett":"ADECCO","nombre":"Ivan Martin Hernandez","dni":"51251516H"},
-  {"ett":"ADECCO","nombre":"Mohamed Baida","dni":"14000162Q"},
-  {"ett":"ADECCO","nombre":"Antonio Francisco Salmeron Fernandez","dni":"78032832L"},
-  {"ett":"JOB AND TALENT","nombre":"Mario Martinez de la Vega Peña","dni":"01940081P"},
-  {"ett":"JOB AND TALENT","nombre":"Guillermo Marcelo Gomez Suarez","dni":"Z3151704L"},
-  {"ett":"JOB AND TALENT","nombre":"Noureddine Kammah El Hassnaoui","dni":"54651014R"},
-  {"ett":"JOB AND TALENT","nombre":"Mateo Hernandez Tabares","dni":"55583112R"},
-  {"ett":"JOB AND TALENT","nombre":"Issam Lechhab Dahrouch","dni":"03481062N"},
-  {"ett":"JOB AND TALENT","nombre":"Alexandru-Mihai","dni":"Y4907831J"},
-  {"ett":"JOB AND TALENT","nombre":"Agapito Garcia Ruiz","dni":"53822925G"},
-  {"ett":"JOB AND TALENT","nombre":"Francisco Jose Gomez Aguilar","dni":"11812900P"}
+  {"ett":"JOB AND TALENT","nombre":"Jesus Rivera Aguilera","dni":"49704937M"},
+  {"ett":"JOB AND TALENT","nombre":"Daniel Mendez","dni":"03177130W"},
+  {"ett":"JOB AND TALENT","nombre":"Raul Gil Garcia","dni":"55067948Z"},
+  {"ett":"JOB AND TALENT","nombre":"Ayoub Taieboune","dni":"Y8871174L"},
+  {"ett":"JOB AND TALENT","nombre":"Iker Alcocer Cruz","dni":"09248526L"},
+  {"ett":"JOB AND TALENT","nombre":"Raquel Daganzo Gallego","dni":"53011441Y"},
+  {"ett":"JOB AND TALENT","nombre":"Alberto Toribio Santos","dni":"09032516W"},
+  {"ett":"JOB AND TALENT","nombre":"Fikri El Mossaoui","dni":"X6694064Y"},
+  {"ett":"JOB AND TALENT","nombre":"Marcos Lamela Saez","dni":"49157175B"},
+  {"ett":"GI GROUP","nombre":"Juan Jose Alamo Pacheco","dni":"06008270A"},
+  {"ett":"GI GROUP","nombre":"Amparo Garrido Fernandez","dni":"11868875R"},
+  {"ett":"GI GROUP","nombre":"Alex Ballestero Baro","dni":"49585240T"},
+  {"ett":"GI GROUP","nombre":"Ricardo Iglesias Fernandez","dni":"51013328H"},
+  {"ett":"GI GROUP","nombre":"Jidahia Campo Mendoza","dni":"Y9135224Y"},
+  {"ett":"GI GROUP","nombre":"Mostafa Sbihi","dni":"Z1493873M"},
+  {"ett":"GI GROUP","nombre":"Gabriel Acebedo Ventosa","dni":"50366970Y"},
+  {"ett":"GI GROUP","nombre":"Guzman Montero Blas","dni":"49365772K"},
+  {"ett":"GI GROUP","nombre":"Fernando Lopez Lopez","dni":"70360110M"},
+  {"ett":"ADECCO","nombre":"Mohamed Talibe Diallo Diaoune","dni":"60554933G"},
+  {"ett":"ADECCO","nombre":"Daniel Navarrete Vargas","dni":"33527651E"},
+  {"ett":"ADECCO","nombre":"Sergio Diaz Bonilla","dni":"70425726W"},
+  {"ett":"TUETT","nombre":"Sleyder David Simbaña Loachamin","dni":"60519532T"},
+  {"ett":"TUETT","nombre":"Jose Uceda Forero","dni":"52977810R"},
+  {"ett":"TUETT","nombre":"Ricardo Cusio Torrado","dni":"46922518B"},
+  {"ett":"TUETT","nombre":"Ramon Losada Fernandez","dni":"72297020Q"},
+  {"ett":"TUETT","nombre":"Miguel Angel Velasquez Leiva","dni":"Y9797891C"},
+  {"ett":"TUETT","nombre":"Angel Caparroz Sanchez","dni":"53808038K"}
 ];
 
 var state = {
@@ -921,7 +924,7 @@ function mostrarConfirmacion(choice, rf, btnA, btnR){
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
         <div style="background:#f5f5f5;border:1px solid #ddd;border-radius:10px;padding:14px 10px;text-align:center;">
-          <div id="stat-total" style="font-size:28px;font-weight:700;color:#111;line-height:1;">0</div>
+          <div id="stat-total" style="font-size:28px;font-weight:700;color:#111;line-height:1;">27</div>
           <div style="font-size:11px;font-weight:600;color:#555;margin-top:4px;">Convocados</div>
         </div>
         <div style="background:#EAF7EF;border:1px solid #A9DFBF;border-radius:10px;padding:14px 10px;text-align:center;">
@@ -961,30 +964,33 @@ function mostrarConfirmacion(choice, rf, btnA, btnR){
 var ADMIN_PWD = 'Instapack2026';
 
 var ALL_CANDS = [
-  {n:'Silvia Tevar Martinez',             e:'GI GROUP'},
-  {n:'Mehdi Bakkali',                     e:'GI GROUP'},
-  {n:'Nerea Elizabeth Paredes Peña',      e:'GI GROUP'},
-  {n:'Alberto Ciprian Chirosca',          e:'GI GROUP'},
-  {n:'Pedro Henrique Rezende de Barros',  e:'GI GROUP'},
-  {n:'Laura Aguado Castaño',              e:'GI GROUP'},
-  {n:'Emmanuel Nyan Plange Coffie',       e:'GI GROUP'},
-  {n:'Christian Nuñez Martin',            e:'GI GROUP'},
-  {n:'Daniel Arroyo de Opazo',            e:'GI GROUP'},
-  {n:'Nadia Boudagohuj Amar',             e:'ADECCO'},
-  {n:'Raul Alegre',                       e:'ADECCO'},
-  {n:'Alex Danilo España Mejia',          e:'ADECCO'},
-  {n:'Israel Bravo De Castro',            e:'ADECCO'},
-  {n:'Ivan Martin Hernandez',             e:'ADECCO'},
-  {n:'Mohamed Baida',                     e:'ADECCO'},
-  {n:'Antonio Francisco Salmeron Fernandez', e:'ADECCO'},
-  {n:'Mario Martinez de la Vega Peña',    e:'JOB AND TALENT'},
-  {n:'Guillermo Marcelo Gomez Suarez',    e:'JOB AND TALENT'},
-  {n:'Noureddine Kammah El Hassnaoui',    e:'JOB AND TALENT'},
-  {n:'Mateo Hernandez Tabares',           e:'JOB AND TALENT'},
-  {n:'Issam Lechhab Dahrouch',            e:'JOB AND TALENT'},
-  {n:'Alexandru-Mihai',                   e:'JOB AND TALENT'},
-  {n:'Agapito Garcia Ruiz',               e:'JOB AND TALENT'},
-  {n:'Francisco Jose Gomez Aguilar',      e:'JOB AND TALENT'}
+  {n:'Jesus Rivera Aguilera',           e:'JOB AND TALENT'},
+  {n:'Daniel Mendez',                   e:'JOB AND TALENT'},
+  {n:'Raul Gil Garcia',                 e:'JOB AND TALENT'},
+  {n:'Ayoub Taieboune',                 e:'JOB AND TALENT'},
+  {n:'Iker Alcocer Cruz',               e:'JOB AND TALENT'},
+  {n:'Raquel Daganzo Gallego',          e:'JOB AND TALENT'},
+  {n:'Alberto Toribio Santos',          e:'JOB AND TALENT'},
+  {n:'Fikri El Mossaoui',               e:'JOB AND TALENT'},
+  {n:'Marcos Lamela Saez',              e:'JOB AND TALENT'},
+  {n:'Juan Jose Alamo Pacheco',         e:'GI GROUP'},
+  {n:'Amparo Garrido Fernandez',        e:'GI GROUP'},
+  {n:'Alex Ballestero Baro',            e:'GI GROUP'},
+  {n:'Ricardo Iglesias Fernandez',      e:'GI GROUP'},
+  {n:'Jidahia Campo Mendoza',           e:'GI GROUP'},
+  {n:'Mostafa Sbihi',                   e:'GI GROUP'},
+  {n:'Gabriel Acebedo Ventosa',         e:'GI GROUP'},
+  {n:'Guzman Montero Blas',             e:'GI GROUP'},
+  {n:'Fernando Lopez Lopez',            e:'GI GROUP'},
+  {n:'Mohamed Talibe Diallo Diaoune',   e:'ADECCO'},
+  {n:'Daniel Navarrete Vargas',         e:'ADECCO'},
+  {n:'Sergio Diaz Bonilla',             e:'ADECCO'},
+  {n:'Sleyder David Simbaña Loachamin', e:'TUETT'},
+  {n:'Jose Uceda Forero',               e:'TUETT'},
+  {n:'Ricardo Cusio Torrado',           e:'TUETT'},
+  {n:'Ramon Losada Fernandez',          e:'TUETT'},
+  {n:'Miguel Angel Velasquez Leiva',    e:'TUETT'},
+  {n:'Angel Caparroz Sanchez',          e:'TUETT'}
 ];
 
 // Show admin panel if URL contains #admin
